@@ -1,4 +1,4 @@
-# Mock-Classifier
+# Mock Classifier
 
 This repository is used to host the mock Classifier service.
 
@@ -8,4 +8,4 @@ The mock service will facilitate development and demo of other Burokratt compone
 
 This service will respond to a series of known input strings with known output [Estonian Ministries](https://en.wikipedia.org/wiki/Government_ministries_of_Estonia).
 
-The mapping between string and ministry will be hard-coded
+The mapping between string and ministry will be hard-coded.
