@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace mock_classifier.integration_tests
+namespace MockClassifier.IntegrationTests
 {
     public class UnitTest1
     {
