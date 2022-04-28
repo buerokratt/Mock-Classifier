@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace mock_classifier.unit_tests
+namespace MockClassifier.UnitTests
 {
     public class UnitTest1
     {
