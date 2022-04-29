@@ -15,7 +15,7 @@ The mocked Classifier Service will offer two main features:
 - For demo, we will match hard coded strings (in English) to Ministries. For example "Thanks. How do I register my daughter at a local school?" would return "education" as the Ministry
 - For testing and broader scenarios, we will also have a token format where we can pass in the exact Ministriy we want to return
 
-Once the appropriate Ministry has been resolved by Classifier, DMR will consult CentOps to map the Ministry to a specific bot uri. It is not Classifier's job to resolve text to bots or institutions, only ministries.
+Once the appropriate Ministry has been resolved by Classifier, DMR, having been provided with appropriate information by CentOps, maps the Ministry to a specific bot uri. It is not Classifier's job to resolve text to bots or institutions, only ministries.
 
 ## Ministries
 
