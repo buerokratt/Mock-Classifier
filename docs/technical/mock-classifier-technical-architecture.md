@@ -76,7 +76,7 @@ For example, an input text of `Give me a {{random}} one` will return a randomly 
 
 ## API Design
 
-The Classifier will be a REST api with just a single endpoint which is `/resolution`.
+The Classifier will be a REST api with just a single endpoint which is `/classifications`.
 
 #### Request
 
