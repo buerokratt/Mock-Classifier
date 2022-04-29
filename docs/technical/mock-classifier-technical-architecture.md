@@ -105,7 +105,7 @@ or
 
 ```json
 {
-"minsitry":"education"
+"ministry":"education"
 }
 ```
 
