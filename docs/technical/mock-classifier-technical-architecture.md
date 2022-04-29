@@ -10,10 +10,10 @@ The Classifier takes raw messages from user's as an input and returns the Minist
 
 The design and build of the real Classifier will be undertaken in parallel to the main project by a separate team. For the purposes of the project, we will create a mock Classifier which takes the same inputs as the real service and produces the same outputs, but has hard-coded resolutions.
 
-The mocked Classifier Service will offer two main features:
+The mocked Classifier will offer two main features:
 
 - For demo, we will match hard coded strings (in English) to Ministries. For example "Thanks. How do I register my daughter at a local school?" would return "education" as the Ministry
-- For testing and broader scenarios, we will also have a token format where we can pass in the exact Ministriy we want to return
+- For testing and broader scenarios, we will also have a token format where we can pass in the exact Ministry we want to return
 
 Once the appropriate Ministry has been resolved by Classifier, DMR, having been provided with appropriate information by CentOps, maps the Ministry to a specific bot uri. It is not Classifier's job to resolve text to bots or institutions, only ministries.
 
@@ -69,6 +69,10 @@ Here are some examples:
 - An input text of `{{rural}} please` will return `rural`
 
 Spaces are not permitted so an input text of `Please return {{ environment}}` would return an error code.
+
+We want the Classifier to support random ministry selection to help with testing, therefore is the `{{random}}` token is used, the Classifier will randomly select and return one of the 11 ministries.
+
+For example, an input text of `Give me a {{random}} one` will return a randomly selected ministry.
 
 ## API Design
 
