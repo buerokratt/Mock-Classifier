@@ -80,7 +80,7 @@ If a token is detected with unrecognised text (i.e. text that does not exactly m
 
 ## API Design
 
-The Classifier will be a REST api with just a single endpoint which is `/classifications`.
+The Classifier will be a REST api with just a single endpoint which is `/input-from-dmr/get-institution-name`.
 
 #### Request
 
