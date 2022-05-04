@@ -98,7 +98,7 @@ or
 
 ```json
 {
-"message":["Please return the {{social}} minsitry"]
+"messages":["Please return the {{social}} ministry"]
 }
 ```
 
