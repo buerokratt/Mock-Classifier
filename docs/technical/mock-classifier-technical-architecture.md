@@ -90,7 +90,7 @@ Expects an `message` parameter which is an array of strings. The strings contain
 
 ```json
 {
-"message":["I want to register my child at school"]
+"messages":["I want to register my child at school"]
 }
 ```
 
