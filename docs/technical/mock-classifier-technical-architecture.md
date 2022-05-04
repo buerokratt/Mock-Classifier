@@ -108,7 +108,7 @@ Other parameters may also be required in order for the Classifier to callback to
 
 For the initial response, the Classifier will return `202/Accepted` with an empty body.
 
-The appropriate http status codes will be returned for error scenarios.
+The appropriate HTTP status codes will be returned for error scenarios.
 
 #### Call-back
 
