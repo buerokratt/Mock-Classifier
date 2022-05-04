@@ -21,7 +21,7 @@ Once the appropriate Ministry has been resolved by Classifier, DMR, having been 
 
 The Classifier will identify one of the 11 Estonian central government ministries as listed in the top navigation of https://www.valitsus.ee/en.
 
-Like all DMR components, the Classifier will not directly respond to the caller, but will instead call back to the DMR with the answer. This will be based on the call back uri defied in the initial message.
+Like all DMR components, the Classifier will not directly respond to the caller, but will instead call back to the DMR with the answer. This will be based on the call back URI defied in the initial message.
 
 The actual text returned will be the key word from the full name in lower case (referred to as a "label").
 
