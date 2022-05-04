@@ -72,7 +72,7 @@ Here are some examples:
 
 Each token detected will result in a separate call back to DMR. For example, input text of `I want to see {{rural}}{{social}} and {{environment}}` will return `rural`, `social` and `environment` as three separate DMR call backs.
 
-We want the Classifier to support random ministry selection to help with testing, therefore is the `{{random}}` token is used, the Classifier will randomly select and return one of the 11 ministries. For example, an input text of `Give me a {{random}} one` will return a randomly selected ministry.
+We want the Classifier to support random ministry selection to help with testing, so when the `{{random}}` token is used, the Classifier will randomly select and return one of the 11 ministries. For example, an input text of `Give me a {{random}} one` will return a randomly selected ministry.
 
 Spaces are not permitted so an input text of `Please return {{ environment}}` would be treated as an error case.
 
