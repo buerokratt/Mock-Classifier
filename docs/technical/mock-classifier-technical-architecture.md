@@ -110,13 +110,13 @@ For the initial response, the Classifier will return `202/Accepted` with an empt
 
 The appropriate HTTP status codes will be returned for error scenarios.
 
-#### Call-back
+#### Callback
 
-The API will then do it's work to establish the ministry.
+The API will then do its work to establish the ministry.
 
 When the work is complete, the Classifier will call the DMR API with a POST request.
 
-The request body will be json format following this schema (the value can be any of the label outlined in the Ministries section).
+The request body will be JSON format following this schema (the value can be any of the labels outlined in the Ministries section).
 
 ```json
 {
