@@ -102,7 +102,7 @@ or
 }
 ```
 
-Other parameters may also be required in order for the Classifier to call back to DMR when the processing is completed (call-back uri for example). Please consult the DMR design documentation for details of these parameters.
+Other parameters may also be required in order for the Classifier to callback to DMR when the processing is completed (callback URI for example). Please consult the DMR design documentation for details of these parameters.
 
 #### Response
 
