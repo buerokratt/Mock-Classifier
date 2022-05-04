@@ -19,7 +19,9 @@ Once the appropriate Ministry has been resolved by Classifier, DMR, having been 
 
 ## Ministries
 
-The Classifier will return one of the 11 Estonian central government ministries as listed in the top navigation of https://www.valitsus.ee/en.
+The Classifier will identify one of the 11 Estonian central government ministries as listed in the top navigation of https://www.valitsus.ee/en.
+
+Like all DMR components, the Classifier will not directly respond to the caller, but will instead call back to the DMR with the answer. This will be based on the call back URI defied in the initial message.
 
 The actual text returned will be the key word from the full name in lower case (referred to as a "label").
 
@@ -41,14 +43,14 @@ The actual text returned will be the key word from the full name in lower case (
 
 The Classifier will be hard-coded to support the following natural language resolutions for testing and demo purposes.
 
-| Input Text (all in English)                                  | Returns     |
-| ------------------------------------------------------------ | ----------- |
-| I want to register my child at school                        | education   |
-| How do I file my annual tax information                      | economic    |
-| I have a question about the Estonian pension system          | economic    |
-| How do I get to Lahemaa park?                                | environment |
-| How do I arrange for my COVID-19 booster vaccination         | social      |
-| I wish to understand what benefits my family are entitled to | social      |
+| Input Text (all in English)                                  | Calls back with |
+| ------------------------------------------------------------ | --------------- |
+| I want to register my child at school                        | education       |
+| How do I file my annual tax information                      | economic        |
+| I have a question about the Estonian pension system          | economic        |
+| How do I get to Lahemaa park?                                | environment     |
+| How do I arrange for my COVID-19 booster vaccination         | social          |
+| I wish to understand what benefits my family are entitled to | social          |
 
 Additional resolutions may be added during the course of implementation as required.
 
@@ -58,34 +60,37 @@ These resolutions will be hard coded into the mock classifier and will not requi
 
 ## Token Resolutions
 
-The Classifier will accept special tokens anywhere in the input text which will inform the Classifier which ministry to resolve.
+The Classifier will accept special tokens anywhere in the input text which will inform the Classifier which ministries to resolve.
 
-The token format will be `{{token}}` where token is one of labels listed in the Ministries section.
+The token format will be `<token>` where token is one of labels listed in the Ministries section.
 
 Here are some examples:
 
-- An input text of `Please return the {{social}} minsitry` will return `social`
-- An input text of `{{environment}}` will return `environment`
-- An input text of `{{rural}} please` will return `rural`
+- An input text of `Please return the <social> minsitry` will call back with `social`
+- An input text of `<environment>` will call back with `environment`
+- An input text of `<rural> please` will call back with `rural`
 
-Spaces are not permitted so an input text of `Please return {{ environment}}` would return an error code.
+Each token detected will result in a separate call back to DMR. For example, input text of `I want to see <rural><social> and <environment>` will return `rural`, `social` and `environment` as three separate DMR call backs.
 
-We want the Classifier to support random ministry selection to help with testing, therefore is the `{{random}}` token is used, the Classifier will randomly select and return one of the 11 ministries.
+We want the Classifier to support random ministry selection to help with testing, so when the `<random>` token is used, the Classifier will randomly select and return one of the 11 ministries. For example, an input text of `Give me a <random> one` will return a randomly selected ministry.
 
-For example, an input text of `Give me a {{random}} one` will return a randomly selected ministry.
+Spaces are not permitted so an input text of `Please return < environment>` would be treated as an error case.
+
+If a token is detected with unrecognised text (i.e. text that does not exactly map to one of the labels defined in the Ministries section or the word `random`), this will be treated as an error case. For example, the input text of `Please return <educationandresearch>` would be an error as would `<Please return <education,social>`.
 
 ## API Design
 
-The Classifier will be a REST api with just a single endpoint which is `/classifications`.
+The Classifier will be a REST api with just a single endpoint which is `/input-from-dmr/institution`.
 
 #### Request
 
-- Accepts only `POST` requests. Other http verbs will result in `404/NotFound` responses.
-- Expects an `input` parameter which contains the text representing the input text. This will be defined in a JSON request body, for example
+Accepts only `POST` requests. Other http verbs will result in `404/NotFound` responses.
+
+Expects an `message` parameter which is an array of strings. The strings contains the text representing the input text. This will be defined in a JSON request body, for example
 
 ```json
 {
-"input":"I want to register my child at school"
+"messages":["I want to register my child at school"]
 }
 ```
 
@@ -93,15 +98,25 @@ or
 
 ```json
 {
-"input":"Please return the {{social}} minsitry"
+"messages":["Please return the <social> ministry"]
 }
 ```
 
+Other parameters may also be required in order for the Classifier to callback to DMR when the processing is completed (callback URI for example). Please consult the DMR design documentation for details of these parameters.
+
 #### Response
 
-- Will return `200/Ok` for normal operations
-- Will return appropriate http status codes for error scenarios.
-- Will return a response body in json format following this schema (the value can be any of the label outlined in the Ministries section)
+For the initial response, the Classifier will return `202/Accepted` with an empty body.
+
+The appropriate HTTP status codes will be returned for error scenarios.
+
+#### Callback
+
+The API will then do its work to establish the ministry.
+
+When the work is complete, the Classifier will call the DMR API with a POST request.
+
+The request body will be JSON format following this schema (the value can be any of the labels outlined in the Ministries section).
 
 ```json
 {
