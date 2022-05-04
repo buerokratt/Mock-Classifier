@@ -62,21 +62,21 @@ These resolutions will be hard coded into the mock classifier and will not requi
 
 The Classifier will accept special tokens anywhere in the input text which will inform the Classifier which ministries to resolve.
 
-The token format will be `{{token}}` where token is one of labels listed in the Ministries section.
+The token format will be `<token>` where token is one of labels listed in the Ministries section.
 
 Here are some examples:
 
-- An input text of `Please return the {{social}} minsitry` will call back with `social`
-- An input text of `{{environment}}` will call back with `environment`
-- An input text of `{{rural}} please` will call back with `rural`
+- An input text of `Please return the <social> minsitry` will call back with `social`
+- An input text of `<environment>` will call back with `environment`
+- An input text of `<rural> please` will call back with `rural`
 
-Each token detected will result in a separate call back to DMR. For example, input text of `I want to see {{rural}}{{social}} and {{environment}}` will return `rural`, `social` and `environment` as three separate DMR call backs.
+Each token detected will result in a separate call back to DMR. For example, input text of `I want to see <rural><social> and <environment>` will return `rural`, `social` and `environment` as three separate DMR call backs.
 
-We want the Classifier to support random ministry selection to help with testing, so when the `{{random}}` token is used, the Classifier will randomly select and return one of the 11 ministries. For example, an input text of `Give me a {{random}} one` will return a randomly selected ministry.
+We want the Classifier to support random ministry selection to help with testing, so when the `<random>` token is used, the Classifier will randomly select and return one of the 11 ministries. For example, an input text of `Give me a <random> one` will return a randomly selected ministry.
 
-Spaces are not permitted so an input text of `Please return {{ environment}}` would be treated as an error case.
+Spaces are not permitted so an input text of `Please return < environment>` would be treated as an error case.
 
-If a token is detected with unrecognised text (i.e. text that does not exactly map to one of the labels defined in the Ministries section or the word `random`), this will be treated as an error case. For example, the input text of `Please return {{educationandresearch}}` would be an error as would `{{Please return {{education,social}}`.
+If a token is detected with unrecognised text (i.e. text that does not exactly map to one of the labels defined in the Ministries section or the word `random`), this will be treated as an error case. For example, the input text of `Please return <educationandresearch>` would be an error as would `<Please return <education,social>`.
 
 ## API Design
 
