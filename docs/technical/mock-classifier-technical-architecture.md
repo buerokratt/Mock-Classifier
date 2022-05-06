@@ -80,13 +80,13 @@ If a token is detected with unrecognised text (i.e. text that does not exactly m
 
 ## API Design
 
-The Classifier will be a REST api with just a single endpoint which is `/input-from-dmr/institution`.
+The Classifier will be a REST API with just a single endpoint which is `/input-from-dmr/institution`.
 
 #### Request
 
-Accepts only `POST` requests. Other http verbs will result in `404/NotFound` responses.
+Accepts only `POST` requests. Other HTTP verbs will result in `404/NotFound` responses.
 
-Expects an `message` parameter which is an array of strings. The strings contains the text representing the input text. This will be defined in a JSON request body, for example
+Expects a `messages` property which is an array of strings. The strings contain the text representing the input text. This will be defined in a JSON request body, for example
 
 ```json
 {
