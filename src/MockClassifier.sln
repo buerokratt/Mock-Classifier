@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockClassifier", "MockClassifier\MockClassifier.csproj", "{0E6B5DFA-070B-4BE3-BAEE-1FB6E1D01738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.UnitTests", "MockClassifier.UnitTests\MockClassifier.UnitTests.csproj", "{5007B237-0325-4856-A170-D0F690AF094B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockClassifier.UnitTests", "MockClassifier.UnitTests\MockClassifier.UnitTests.csproj", "{5007B237-0325-4856-A170-D0F690AF094B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.IntegrationTests", "MockClassifier.IntegrationTests\MockClassifier.IntegrationTests.csproj", "{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockClassifier.IntegrationTests", "MockClassifier.IntegrationTests\MockClassifier.IntegrationTests.csproj", "{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.Api", "MockClassifier.Api\MockClassifier.Api.csproj", "{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0E6B5DFA-070B-4BE3-BAEE-1FB6E1D01738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E6B5DFA-070B-4BE3-BAEE-1FB6E1D01738}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E6B5DFA-070B-4BE3-BAEE-1FB6E1D01738}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E6B5DFA-070B-4BE3-BAEE-1FB6E1D01738}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5007B237-0325-4856-A170-D0F690AF094B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5007B237-0325-4856-A170-D0F690AF094B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5007B237-0325-4856-A170-D0F690AF094B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
