@@ -1,25 +1,22 @@
 using Xunit;
 using MockClassifier.Api.Services;
+using MockClassifier.Api.Models;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MockClassifier.UnitTests
 {
-    public class MinistryClassifierServiceTest
+    public class TokenServiceTest
     {
-        private readonly MinistryClassifierService ministryClassifierService;
+        private readonly TokenService ministryClassifierService;
 
-        public MinistryClassifierServiceTest()
+        public TokenServiceTest()
         {
-            ministryClassifierService = new MinistryClassifierService();
+            ministryClassifierService = new TokenService();
         }
 
         [Theory]
-        [InlineData("I want to register my child at school", new string[] { "education" })]
-        [InlineData("I wish to understand what benefits my family are entitled to", new string[] { "social" })]
-        [InlineData("How do I arrange for my COVID-19 booster vaccination", new string[] { "social" })]
-        [InlineData("How do I get to Lahemaa park?", new string[] { "environment" })]
-        [InlineData("I have a question about the Estonian pension system", new string[] { "economic" })]
-        [InlineData("How do I file my annual tax information", new string[] { "economic" })]
         [InlineData("<education>", new string[] { "education" })]
         [InlineData("Please return the <social> minsitry", new string[] { "social" })]
         [InlineData("I want to see <rural><social> and <environment>", new string[] {"rural","social", "environment" })]
@@ -40,8 +37,10 @@ namespace MockClassifier.UnitTests
         {
             var messageBody = "I want <random>";
             string[] result = ministryClassifierService.Classify(messageBody);
-            var expectedMinistries = new List<string> { "justice", "education", "defence", "environment", "cultural", "rural", "economic", "finance", "social", "interior", "foreign" };
-            Assert.Contains<string>(result[0], expectedMinistries);
+            var expectedMinistries = Enum.GetValues(typeof(Ministry))
+                                    .Cast<Ministry>()
+                                    .ToList();
+            Assert.Contains((Ministry)Enum.Parse<Ministry>(result[0]), expectedMinistries);
         }
     }
 }
