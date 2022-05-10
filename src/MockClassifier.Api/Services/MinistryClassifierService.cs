@@ -7,12 +7,11 @@ namespace MockClassifier.Api.Services
     {
        private readonly Regex ministryRegex = new("<random>|<justice>|<education>|<defence>|<environment>|<cultural>|<rural>|<economic>|<finance>|<social>|<interior>|<foreign>", RegexOptions.Compiled);
 
-
        public string[] Classify(string messageBody)
        {
             var token = "";
 
-            //Is it one of hardcoded expression            
+            //Is it one of hardcoded expression, then return       
             switch (messageBody)
 	        {
 		        case "I want to register my child at school" : token = "education"; break;
@@ -23,6 +22,9 @@ namespace MockClassifier.Api.Services
                 case "I wish to understand what benefits my family are entitled to" : token = "social"; break ;
 	        }
             
+            if(token != "")
+                return new string[] { token };
+
             //search for 11 ministries' label and strip <> and return in lowercase if found
             var tokenSections = ministryRegex.Matches(messageBody);
             var tokens = tokenSections
@@ -35,17 +37,17 @@ namespace MockClassifier.Api.Services
                     .Select(s => s.ToLower().Trim())
                     .Distinct();
 
-            //get random ministry
+            //get random ministry if random token passed in
             if (tokens.Any() && tokens.Contains("random"))
+            {
                 token = GetRandomMinistry();
-
-            if ( token != "")
                 return new string[] { token };
-            else 
+            }
+            else
                 return tokens.ToArray();
        }
 
-        private string GetRandomMinistry()
+        private static string GetRandomMinistry()
         {
             var ministries = new string[] { "justice", "education", "defence", "environment", "cultural", "rural", "economic", "finance", "social", "interior", "foreign" };
             Random rand = new();
