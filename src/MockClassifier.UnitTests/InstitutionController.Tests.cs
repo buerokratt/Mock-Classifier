@@ -16,9 +16,10 @@ namespace MockClassifier.UnitTests
         }
 
         [Theory]
+        [InlineData("")]
         [InlineData("message1")]
         [InlineData("message1","message2")]
-        public void TestReturnsAccepted(params string[] messages)
+        public void ReturnsAccepted(params string[] messages)
         {
             // Arrange
             var messagesInput = new MessagesInput() { Messages = messages.ToList() };
