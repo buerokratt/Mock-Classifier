@@ -24,6 +24,7 @@ namespace MockClassifier.UnitTests
         [InlineData("Please return < environment>", new string[] { })]
         [InlineData("Please return <educationandresearch>", new string[] { })]
         [InlineData("<Please return <education,social>",new string[] {})]
+        [InlineData("", new string[] { })]
 
         public void TestClassify( string messageBody, string[] expectedTokens)
         {
