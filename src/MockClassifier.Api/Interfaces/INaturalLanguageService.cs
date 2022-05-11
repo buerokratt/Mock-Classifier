@@ -1,5 +1,5 @@
 ﻿/// <summary>
-///  This interface for Token service which classifies messageBody based on  pre-defined phrases
+///  This interface for Natural Language service which classifies messageBody based on pre-defined phrases
 /// </summary>
 namespace MockClassifier.Api.Interfaces
 {
