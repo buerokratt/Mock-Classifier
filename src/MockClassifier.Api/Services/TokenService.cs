@@ -33,11 +33,11 @@ namespace MockClassifier.Api.Services
             var tokenSections = ministryRegex.Matches(messageBody);
             var tokens = tokenSections
                     .SelectMany(s => s.Captures)
-                    .SelectMany(c =>
+                    .Select(c =>
                         c.Value
                             .Replace("<", string.Empty)
                             .Replace(">", string.Empty)
-                            .Split(","))
+                            )
                     .Select(s => s.ToLower().Trim())
                     .Distinct();
 
