@@ -9,11 +9,11 @@ namespace MockClassifier.UnitTests
 {
     public class TokenServiceTest
     {
-        private readonly TokenService ministryClassifierService;
+        private readonly TokenService tokenService;
 
         public TokenServiceTest()
         {
-            ministryClassifierService = new TokenService();
+            tokenService = new TokenService();
         }
 
         [Theory]
@@ -28,7 +28,7 @@ namespace MockClassifier.UnitTests
 
         public void TestClassify( string messageBody, string[] expectedTokens)
         {
-            var result = ministryClassifierService.Classify(messageBody);
+            var result = tokenService.Classify(messageBody);
             Assert.Equal(expectedTokens, result);
             Assert.NotNull(result);
         }
@@ -37,7 +37,7 @@ namespace MockClassifier.UnitTests
         public void TestRandomClassify()
         {
             var messageBody = "I want <random>";
-            string[] result = ministryClassifierService.Classify(messageBody);
+            string[] result = tokenService.Classify(messageBody);
             var expectedMinistries = Enum.GetValues(typeof(Ministry))
                                     .Cast<Ministry>()
                                     .ToList();

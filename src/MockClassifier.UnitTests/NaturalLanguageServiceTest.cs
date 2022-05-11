@@ -22,10 +22,10 @@ namespace MockClassifier.UnitTests
         [InlineData("i want to register my child at school", new string[] { "education" })]
         [InlineData("", new string[] { })]
         [InlineData("not mapped", new string[] { })]
-        public void TestClassify(string messageBody, string[] expectedTokens)
+        public void TestClassify(string messageBody, string[] expectedMinistries)
         {
             var result = naturalLanguageService.Classify(messageBody);
-            Assert.Equal(expectedTokens, result);
+            Assert.Equal(expectedMinistries, result);
             Assert.NotNull(result);
         }
     }

@@ -3,14 +3,14 @@ using MockClassifier.Api.Interfaces;
 
 namespace MockClassifier.Api.Services
 {
-    public class NaturalLanguageService : IClassifierService
+    public class NaturalLanguageService : INaturalLanguageService
     {
         public string[] Classify(string messageBody)
         {
-            if (messageBody == null || messageBody.Length == 0)
+            if (string.IsNullOrEmpty(messageBody))
                 return Array.Empty<string>(); 
 
-            var token = messageBody.ToLower() switch
+            var ministry = messageBody.ToLower() switch
             {
                 "i want to register my child at school" => Ministry.education.ToString(),
                 "how do i file my annual tax information" => Ministry.economic.ToString(),
@@ -20,10 +20,10 @@ namespace MockClassifier.Api.Services
                 "i wish to understand what benefits my family are entitled to" => Ministry.social.ToString(),
                 _ => null,
             };
-            if (token == null)
+            if (ministry == null)
                 return Array.Empty<string>();
             else
-                return new string[] { token };
+                return new string[] { ministry };
         }
     }
 }

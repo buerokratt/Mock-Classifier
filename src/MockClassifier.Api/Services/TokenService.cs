@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MockClassifier.Api.Services
 {
-    public class TokenService : IClassifierService
+    public class TokenService : ITokenService
     {
         private readonly Regex ministryRegex;
         private static readonly Random random = new();
@@ -26,8 +26,9 @@ namespace MockClassifier.Api.Services
 
         public string[] Classify(string messageBody)
         {
-            if(messageBody == null || messageBody.Length == 0)
+            if (string.IsNullOrEmpty(messageBody))
                 return Array.Empty<string>();
+
             //search for 11 ministries' label and strip <> and return in lowercase if found
             var tokenSections = ministryRegex.Matches(messageBody);
             var tokens = tokenSections
@@ -43,14 +44,14 @@ namespace MockClassifier.Api.Services
             //get random ministry if random token passed in
             if (tokens.Any() && tokens.Contains("random"))
             {
-                var token = GetRandomMinistry();
+                var token = GetRandomMinistryName();
                 return new string[] { token };
             }
             else
                 return tokens.ToArray();
         }
 
-        private string GetRandomMinistry()
+        private string GetRandomMinistryName()
         {
             Ministry randomMinistry = (Ministry)ministryCache.GetValue(random.Next(ministryCache.Length));
             return randomMinistry.ToString();
