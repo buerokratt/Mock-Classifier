@@ -9,15 +9,13 @@ using Xunit;
 
 namespace MockClassifier.UnitTests
 {
-    public class ClassifyControllerTests
+    public class InstitutionControllerTests
     {
-        private readonly Mock<IDmrService> mockDmrService;
-        private readonly ClassifyController sut;
+        private readonly InstitutionController sut;
 
-        public ClassifyControllerTests()
+        public InstitutionControllerTests()
         {
-            mockDmrService = new Mock<IDmrService>();
-            sut = new ClassifyController(mockDmrService.Object);
+            sut = new InstitutionController();
         }
 
         [Theory]
@@ -27,7 +25,7 @@ namespace MockClassifier.UnitTests
         public void ReturnsAccepted(params string[] messages)
         {
             // Arrange
-            var request = new ClassifyRequest
+            var request = new MessagesInput
             {
                 CallbackUri = "https://callback.fakeurl.com",
                 Messages = messages
