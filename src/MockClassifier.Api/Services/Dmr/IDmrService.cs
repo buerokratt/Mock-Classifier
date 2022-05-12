@@ -6,9 +6,14 @@
     public interface IDmrService
     {
         /// <summary>
-        /// Send the given request to the DMR API
+        /// Record the given request to be sent to the DMR API later
         /// </summary>
         /// <param name="request">The request object</param>
-        void SendRequest(DmrRequest request);
+        void RecordRequest(DmrRequest request);
+
+        /// <summary>
+        /// Begin processing requests
+        /// </summary>
+        Task ProcessRequestsAsync();
     }
 }

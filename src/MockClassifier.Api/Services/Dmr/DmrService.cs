@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 
 namespace MockClassifier.Api.Services.Dmr
 {
@@ -10,33 +11,37 @@ namespace MockClassifier.Api.Services.Dmr
         private readonly HttpClient httpClient;
         private readonly ILogger<DmrService> logger;
 
-        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceConfig config, ILogger<DmrService> logger)
+        private readonly ConcurrentQueue<DmrRequest> requests;
+
+        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger)
         {
             this.httpClient = httpClientFactory.CreateClient(config.ClientName);
             this.logger = logger;
+
+            this.requests = new ConcurrentQueue<DmrRequest>();
         }
 
-        public void SendRequest(DmrRequest request)
+        public void RecordRequest(DmrRequest request)
         {
-            /**
-             * THIS IS VERY BAD PRACTICE - we should never call Task.Run like this! If the application crashes/shuts down for any reason, 
-             * then all pending or executing tasks would be lost.
-             * 
-             * However, since this is a Mock service and we can be lax on reliability and fault tolerance and avoid further investment 
-             * into code that might be thrown away.
-             */
-            Task.Run(async () =>
+            requests.Enqueue(request);
+        }
+
+        public async Task ProcessRequestsAsync()
+        {
+            while (requests.TryDequeue(out var request))
             {
                 try
                 {
                     var response = await httpClient.PostAsJsonAsync("/", request);
-                    logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {request.Payload.Messages}");
+                    response.EnsureSuccessStatusCode();
+
+                    logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {string.Join(", ", request.Payload.Messages)}");
                 }
                 catch (Exception exception)
                 {
                     logger.LogError(exception, "Call to DMR Service failed");
                 }
-            });
+            }
         }
     }
 }

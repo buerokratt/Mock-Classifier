@@ -1,11 +1,18 @@
+using MockClassifier.Api.Services.Dmr;
+using MockClassifier.Api.Services.Dmr.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var configuration = builder.Configuration;
+var services = builder.Services;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Add services to the container.
+var dmrSettings = configuration.GetSection("DmrServiceSettings").Get<DmrServiceSettings>();
+services.AddDmrService(dmrSettings);
+
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 

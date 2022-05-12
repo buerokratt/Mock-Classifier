@@ -1,12 +1,13 @@
 ﻿namespace MockClassifier.Api.Services.Dmr
 {
     /// <summary>
-    /// A configuration object for <see cref="DmrService"/>
+    /// A settings object for <see cref="DmrService"/>
     /// </summary>
-    public class DmrServiceConfig
+    public class DmrServiceSettings
     {
         private const string DefaultHttpClientName = "DmrApi";
-        private const int DefaultHttpRequestTimeoutMs = 30_000; // 30 seconds
+        private const int DefaultHttpRequestTimeoutMs = 30_000;
+        private const int DefaultDmrRequestProcessIntervalMs = 5_000;
 
         /// <summary>
         /// The base URI for the DMR REST API
@@ -22,5 +23,10 @@
         /// The maximum timeout a HTTP request will wait for a response before it drops
         /// </summary>
         public int HttpRequestTimeoutMs { get; set; } = DefaultHttpRequestTimeoutMs;
+
+        /// <summary>
+        /// The interval in milliseconds between DMR requests processing
+        /// </summary>
+        public int DmrRequestProcessIntervalMs { get; set; } = DefaultDmrRequestProcessIntervalMs;
     }
 }

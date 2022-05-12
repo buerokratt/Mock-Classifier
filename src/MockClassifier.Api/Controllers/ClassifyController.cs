@@ -21,7 +21,7 @@ namespace MockClassifier.Api.Controllers
         /// <param name="request">The request model for the classify endpoint</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
-        public AcceptedResult Post([FromBody] ClassifierRequest request)
+        public AcceptedResult Post([FromBody] ClassifyRequest request)
         {
             var ministries = new List<string>();
 
@@ -32,7 +32,7 @@ namespace MockClassifier.Api.Controllers
 
             foreach (var ministry in ministries)
             {
-                dmrService.SendRequest(new DmrRequest
+                dmrService.RecordRequest(new DmrRequest
                 {
                     Payload = new Payload
                     {

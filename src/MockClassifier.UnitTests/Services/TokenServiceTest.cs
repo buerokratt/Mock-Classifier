@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace MockClassifier.UnitTests
+namespace MockClassifier.UnitTests.Services
 {
     public class TokenServiceTest
     {
@@ -18,7 +18,7 @@ namespace MockClassifier.UnitTests
 
         [Theory]
         [InlineData("<education>", new string[] { "education" })]
-        [InlineData("Please return the <social> minsitry", new string[] { "social" })]
+        [InlineData("Please return the <social> ministry", new string[] { "social" })]
         [InlineData("I want to see <rural><social> and <environment>", new string[] {"rural","social", "environment" })]
         [InlineData("<rural> please", new string[] {"rural"}) ]
         [InlineData("Please return < environment>", new string[] { })]
