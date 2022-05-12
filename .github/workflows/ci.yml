@@ -25,4 +25,4 @@ jobs:
       run: dotnet build src/MockClassifier.sln --no-restore
       
     - name: Dotnet Test
-      run: dotnet test src/MockClassifier.sln --no-build --verbosity normal
+      run: dotnet test src/MockClassifier.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
