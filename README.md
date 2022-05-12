@@ -2,7 +2,7 @@
 
 This repository is used to host the mock Classifier service.
 
-This service is used as a mocked replacement for the real Classifier which is being developed in parallel.
+This service is used as a mocked replacement for the real Classifier which is being developed seperately.
 
 The mock service will facilitate development and demo of other Burokratt components until the real Classifier is available.
 
