@@ -25,10 +25,10 @@ jobs:
       run: dotnet build src/MockClassifier.sln --no-restore
       
     - name: Dotnet Test
-      run: dotnet test src/MockClassifier.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test src/MockClassifier.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory coverage
 
     - name: Copy Coverage To Predictable Location
-      run: cp src/*/TestResults/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
+      run: cp coverage/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.0.2
