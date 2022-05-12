@@ -12,13 +12,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
+        
+    - name: Dotnet Restore
       run: dotnet restore src/MockClassifier.sln
-    - name: Build
+      
+    - name: Dotnet Build
       run: dotnet build src/MockClassifier.sln --no-restore
-    - name: Test
+      
+    - name: Dotnet Test
       run: dotnet test src/MockClassifier.sln --no-build --verbosity normal
