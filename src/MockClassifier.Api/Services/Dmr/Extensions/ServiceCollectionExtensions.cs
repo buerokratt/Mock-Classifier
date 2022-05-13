@@ -6,7 +6,7 @@ namespace MockClassifier.Api.Services.Dmr.Extensions
     /// <summary>
     /// Extension class to help add all services related to the DMR
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
     public static class ServiceCollectionExtensions
     {
         /// <summary>

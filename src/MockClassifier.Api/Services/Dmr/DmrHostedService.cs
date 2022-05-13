@@ -5,7 +5,7 @@ namespace MockClassifier.Api.Services.Dmr
     /// <summary>
     /// A background hosted service that periodically triggers the DMR request processor
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
     public class DmrHostedService : IHostedService
     {
         private readonly IDmrService dmrService;

@@ -10,7 +10,7 @@ namespace MockClassifier.Api.Services.Dmr
     /// <summary>
     /// The model for the DMR API endpoint
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
     public record DmrRequest
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace MockClassifier.Api.Services.Dmr
     /// <summary>
     /// The payload that the DMR handles
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
     public record Payload
     {
         /// <summary>
