@@ -55,11 +55,17 @@ jobs:
       working-directory: src
       run: dotnet stryker
       
-    - name: Upload Coverage Report
+    - name: Upload Coverage Markdown Report
       uses: actions/upload-artifact@v3.0.0
       with:
-        name: coverage-report
+        name: coverage-report-markdown
         path: code-coverage-results.md
+        
+    - name: Upload Coverage XML Report
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: coverage-report-xml
+        path: coverage.cobertura.xml
     
     - name: Upload Mutation Report
       uses: actions/upload-artifact@v3.0.0
