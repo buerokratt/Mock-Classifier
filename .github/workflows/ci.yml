@@ -19,10 +19,13 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Dotnet Restore
-      run: dotnet restore src/MockClassifier.sln
+      run: dotnet restore src/*.sln 
+        
+    - name: Dotnet Fornat
+      run: dotnet format src/*.sln --no-restore
       
     - name: Dotnet Build
-      run: dotnet build src/MockClassifier.sln --no-restore
+      run: dotnet build src/*.sln --no-restore
       
     - name: Dotnet Test
-      run: dotnet test src/MockClassifier.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test src/*.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
