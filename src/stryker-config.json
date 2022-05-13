@@ -3,6 +3,7 @@
       "test-projects": [ "./MockClassifier.UnitTests/MockClassifier.UnitTests.csproj" ],
       "reporters": [
         "progress",
+        "cleartext",
         "html"
       ],
       "thresholds": { "high": 90, "low": 60, "break": 60 }
