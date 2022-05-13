@@ -19,6 +19,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
+    - name: Dotnet Restore Tools
+      run: dotnet tool restore
+        
     - name: Dotnet Restore
       run: dotnet restore src/*.sln 
         
