@@ -32,3 +32,18 @@ jobs:
       
     - name: Cobertura Coverage output to root
       run: cp src/*.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
+      
+    - name: Code Coverage Summary
+      uses: irongut/CodeCoverageSummary@v1.2.0
+      with:
+        filename: coverage.cobertura.xml
+        fail_below_min: true
+        format: markdown
+        output: both
+        thresholds: '80'
+        
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2.2.0
+      with:
+        recreate: true
+        path: code-coverage-results.md
