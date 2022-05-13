@@ -44,7 +44,7 @@ jobs:
     - name: Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: coverage.cobertura.xml
+        filename: ../coverage.cobertura.xml
         fail_below_min: true
         format: markdown
         output: both
@@ -55,7 +55,7 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         recreate: true
-        path: code-coverage-results.md
+        path: ../code-coverage-results.md
         
     - name: Mutation Test
       run: dotnet stryker
