@@ -1,0 +1,9 @@
+{
+    "stryker-config": {
+      "test-projects": [ "./MockClassifier.UnitTests/MockClassifier.UnitTests.csproj" ],
+      "reporters": [
+        "progress",
+        "html"
+      ] 
+    }  
+  }
