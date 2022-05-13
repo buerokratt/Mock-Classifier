@@ -27,5 +27,8 @@ jobs:
     - name: Dotnet Build
       run: dotnet build src/*.sln --no-restore
       
-    - name: Dotnet Test
-      run: dotnet test src/*.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Dotnet Test (unit tests only)
+      run: dotnet test /src/*.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      
+    - name: Cobertura Coverage output to root
+      run: cp /src/*.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
