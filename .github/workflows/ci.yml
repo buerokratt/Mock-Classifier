@@ -10,6 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
 
     steps:
     - uses: actions/checkout@v3
@@ -23,19 +26,19 @@ jobs:
       run: dotnet tool restore
         
     - name: Dotnet Restore
-      run: dotnet restore src/*.sln 
+      run: dotnet restore 
         
     - name: Dotnet Format
-      run: dotnet format src/*.sln --no-restore
+      run: dotnet format --no-restore
       
     - name: Dotnet Build
-      run: dotnet build src/*.sln --no-restore
+      run: dotnet build --no-restore
       
     - name: Dotnet Test (unit tests only)
-      run: dotnet test src/*.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test *.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
     - name: Copy Coverage output to root
-      run: cp src/*.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
+      run: cp *.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
       
 # Have set threshold to 20% for developing the pipeline itself. Should be 80% when completed.
     - name: Code Coverage Summary
