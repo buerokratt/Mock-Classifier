@@ -72,15 +72,17 @@ namespace MockClassifier.UnitTests.Services.Dmr
             await sut.ProcessRequestsAsync();
         }
 
-        private Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler)
+        private Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler, DmrServiceSettings settings = null)
         {
+            settings = settings ?? DefaultServiceConfig;
+
             var mockHttpClientFactory = new Mock<IHttpClientFactory>();
             mockHttpClientFactory
                 .Setup(m => m.CreateClient(It.IsAny<string>()))
                 .Returns(() =>
                 {
                     var client = messageHandler.ToHttpClient();
-                    client.BaseAddress = new Uri("https://dmr.fakeurl.com");
+                    client.BaseAddress = new Uri(settings.DmrApiUri);
 
                     return client;
                 });
