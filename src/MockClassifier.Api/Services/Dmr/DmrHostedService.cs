@@ -1,8 +1,11 @@
-﻿namespace MockClassifier.Api.Services.Dmr
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MockClassifier.Api.Services.Dmr
 {
     /// <summary>
     /// A background hosted service that periodically triggers the DMR request processor
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class DmrHostedService : IHostedService
     {
         private readonly IDmrService dmrService;

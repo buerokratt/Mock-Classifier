@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MockClassifier.Api.Services.Dmr.Extensions
 {
     /// <summary>
     /// Extension class to help add all services related to the DMR
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         /// <summary>

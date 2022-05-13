@@ -1,4 +1,6 @@
-﻿namespace MockClassifier.Api.Services.Dmr
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MockClassifier.Api.Services.Dmr
 {
     /**
      * NOTE:
@@ -8,6 +10,7 @@
     /// <summary>
     /// The model for the DMR API endpoint
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public record DmrRequest
     {
         /// <summary>
@@ -24,6 +27,7 @@
     /// <summary>
     /// The payload that the DMR handles
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public record Payload
     {
         /// <summary>
