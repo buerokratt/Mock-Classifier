@@ -5,14 +5,14 @@ on:
   push:
   pull_request:
     branches: [ main ]
+    
+defaults:
+  run:
+    working-directory: src
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src
 
     steps:
     - uses: actions/checkout@v3
@@ -38,13 +38,13 @@ jobs:
       run: dotnet test *.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
     - name: Copy Coverage output to root
-      run: cp *.UnitTests/TestResults/**/coverage.cobertura.xml src/coverage.cobertura.xml
+      run: cp *.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
       
 # Have set threshold to 20% for developing the pipeline itself. Should be 80% when completed.
     - name: Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: coverage.cobertura.xml
+        filename: /../coverage.cobertura.xml
         fail_below_min: true
         format: markdown
         output: both
