@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.Api.Services.Dmr.Extensions;
 
@@ -9,6 +12,8 @@ var services = builder.Services;
 // Add services to the container.
 var dmrSettings = configuration.GetSection("DmrServiceSettings").Get<DmrServiceSettings>();
 services.AddDmrService(dmrSettings);
+services.TryAddSingleton<ITokenService, TokenService>();
+services.TryAddSingleton<INaturalLanguageService, NaturalLanguageService>();
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
