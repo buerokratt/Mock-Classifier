@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Models;
-using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 
 namespace MockClassifier.Api.Controllers
