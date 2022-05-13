@@ -4,6 +4,7 @@
       "reporters": [
         "progress",
         "html"
-      ] 
+      ],
+      "thresholds": { "high": 90, "low": 60, "break": 60 }
     }  
   }
