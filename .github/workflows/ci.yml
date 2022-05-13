@@ -21,7 +21,7 @@ jobs:
     - name: Dotnet Restore
       run: dotnet restore src/*.sln 
         
-    - name: Dotnet Fornat
+    - name: Dotnet Format
       run: dotnet format src/*.sln --no-restore
       
     - name: Dotnet Build
