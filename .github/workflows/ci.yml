@@ -11,7 +11,7 @@ defaults:
     working-directory: src
 
 jobs:
-  Build:
+  BuildTest:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,10 +34,6 @@ jobs:
     - name: Dotnet Build
       run: dotnet build --no-restore
      
-  UnitTest:
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Dotnet Test (unit tests only)
       run: dotnet test *.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
@@ -48,7 +44,7 @@ jobs:
     - name: Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: /../coverage.cobertura.xml
+        filename: coverage.cobertura.xml
         fail_below_min: true
         format: markdown
         output: both
@@ -61,10 +57,6 @@ jobs:
         recreate: true
         path: code-coverage-results.md
   
-  MutationTest:
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Mutation Test
       run: dotnet stryker
     
