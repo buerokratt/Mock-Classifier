@@ -1,5 +1,6 @@
 name: Mock Classifier CI Pipeline
 
+# push is only for developing th pipline itself. When complete it shoudl only be on PRs to [main]
 on:
   push:
   pull_request:
@@ -28,11 +29,12 @@ jobs:
       run: dotnet build src/*.sln --no-restore
       
     - name: Dotnet Test (unit tests only)
-      run: dotnet test src/MockClassifier.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test src/*.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
-    - name: Cobertura Coverage output to root
+    - name: Copy Coverage output to root
       run: cp src/*.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
       
+# Have set threshold to 20% for developing the pipeline itself. Should be 80% when completed.
     - name: Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
@@ -40,7 +42,7 @@ jobs:
         fail_below_min: true
         format: markdown
         output: both
-        thresholds: '80'
+        thresholds: '20'
         
     - name: Add Coverage PR Comment
       uses: marocchino/sticky-pull-request-comment@v2.2.0
