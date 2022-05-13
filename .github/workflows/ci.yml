@@ -5,10 +5,6 @@ on:
   push:
   pull_request:
     branches: [ main ]
-    
-defaults:
-  run:
-    working-directory: src
 
 jobs:
   BuildTest:
@@ -23,22 +19,22 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Dotnet Restore Tools
-      run: dotnet tool restore
+      run: dotnet tool restore --tool-manifest "src/.config/dotnet-tools.json"
         
     - name: Dotnet Restore
-      run: dotnet restore 
+      run: dotnet restore src/*.sln
         
     - name: Dotnet Format
-      run: dotnet format --no-restore
+      run: dotnet format src/*.sln --no-restore
       
     - name: Dotnet Build
-      run: dotnet build --no-restore
+      run: dotnet build src/*.sln --no-restore
      
     - name: Dotnet Test (unit tests only)
-      run: dotnet test *.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test src/*.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
     - name: Copy Coverage output to root
-      run: cp *.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
+      run: cp src/*.UnitTests/TestResults/**/coverage.cobertura.xml coverage.cobertura.xml
       
 # Have set threshold to 20% for developing the pipeline itself. Should be 80% when completed.
     - name: Code Coverage Summary
