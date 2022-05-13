@@ -11,7 +11,7 @@ defaults:
     working-directory: src
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,11 @@ jobs:
       
     - name: Dotnet Build
       run: dotnet build --no-restore
-      
+     
+  UnitTest:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Dotnet Test (unit tests only)
       run: dotnet test *.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
       
@@ -56,7 +60,11 @@ jobs:
       with:
         recreate: true
         path: code-coverage-results.md
-        
+  
+  MutationTest:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Mutation Test
       run: dotnet stryker
     
