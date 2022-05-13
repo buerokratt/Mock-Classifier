@@ -1,7 +1,7 @@
 using MockClassifier.Api.Services;
 using Xunit;
 
-namespace MockClassifier.UnitTests
+namespace MockClassifier.UnitTests.Services
 {
     public class NaturalLanguageServiceTest
     {

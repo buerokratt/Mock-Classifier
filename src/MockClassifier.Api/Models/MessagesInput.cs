@@ -2,6 +2,7 @@
 {
     public class MessagesInput
     {
-        public List<string> Messages { get; set; }
+        public string CallbackUri { get; set; }
+        public string[] Messages { get; set; }
     }
 }
