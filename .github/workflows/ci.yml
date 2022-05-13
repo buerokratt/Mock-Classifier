@@ -2,7 +2,6 @@ name: Mock Classifier CI Pipeline
 
 # push is only for developing the pipline itself. When complete it shoudl only be on PRs to [main]
 on:
-  push:
   pull_request:
     branches: [ main ]
 
