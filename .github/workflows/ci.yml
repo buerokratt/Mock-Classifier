@@ -54,6 +54,12 @@ jobs:
     - name: Mutation Test
       working-directory: src
       run: dotnet stryker
+      
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: coverage-report
+        path: code-coverage-results.md
     
     - name: Upload Mutation Report
       uses: actions/upload-artifact@v3.0.0
