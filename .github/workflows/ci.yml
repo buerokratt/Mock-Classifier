@@ -46,6 +46,16 @@ jobs:
         
     - name: Add Coverage PR Comment
       uses: marocchino/sticky-pull-request-comment@v2.2.0
+      if: github.event_name == 'pull_request'
       with:
         recreate: true
         path: code-coverage-results.md
+        
+    - name: Mutation Test
+      run: dotnet stryker
+    
+    - name: Upload Mutation Report
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: mutation-report
+        path: StrykerOutput
