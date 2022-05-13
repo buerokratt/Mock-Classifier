@@ -1,6 +1,6 @@
 name: Mock Classifier CI Pipeline
 
-# push is only for developing th pipline itself. When complete it shoudl only be on PRs to [main]
+# push is only for developing the pipline itself. When complete it shoudl only be on PRs to [main]
 on:
   push:
   pull_request:
@@ -54,7 +54,7 @@ jobs:
         path: code-coverage-results.md
   
     - name: Mutation Test
-      working-directory: /src/*.UnitTests
+      working-directory: src
       run: dotnet stryker
     
     - name: Upload Mutation Report
