@@ -9,8 +9,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["MockClassifier.Api/MockClassifier.Api.csproj", "MockClassifier.Api/"]
 RUN dotnet restore "MockClassifier.Api/MockClassifier.Api.csproj"
-COPY . .
 WORKDIR "/src/MockClassifier.Api"
+COPY . .
 RUN dotnet build "MockClassifier.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
