@@ -13,7 +13,7 @@ namespace MockClassifier.Api.Controllers
         private readonly ITokenService _tokenService;
         private readonly INaturalLanguageService _naturalLanguageService;
 
-        public InstitutionController(IDmrService dmrService,ITokenService tokenService, INaturalLanguageService naturalLanguageService)
+        public InstitutionController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService)
         {
             _dmrService = dmrService;
             _tokenService = tokenService;
