@@ -1,6 +1,6 @@
 # Mock Classifier
 
-[![Mock Classifier CI Pipeline](https://github.com/buerokratt/Mock-Classifier/actions/workflows/ci.yml/badge.svg)](https://github.com/buerokratt/Mock-Classifier/actions/workflows/ci.yml)
+[![Mock Classifier CI Pipeline](https://github.com/buerokratt/Mock-Classifier/actions/workflows/ci-pullrequest-main.yml/badge.svg)](https://github.com/buerokratt/Mock-Classifier/actions/workflows/ci-pullrequest-main.yml)
 
 This repository is used to host the mock Classifier service.
 
