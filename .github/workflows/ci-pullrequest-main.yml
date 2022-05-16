@@ -27,6 +27,10 @@ jobs:
       
     - name: Dotnet Build
       run: dotnet build src/*.sln --no-restore
+      
+    - name: Dotnet Publish
+      working-directory: src
+      run: dotnet publish *.sln --no-restore
      
     - name: Dotnet Test (unit tests only)
       run: dotnet test src/*.UnitTests/*.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
