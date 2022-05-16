@@ -35,19 +35,19 @@ namespace MockClassifier.Api.Controllers
 
                 foreach (var ministry in ministries)
                 {
-                     _dmrService.RecordRequest(GetDmrRequest(message, ministry));
+                     _dmrService.RecordRequest(GetDmrRequest(message, ministry, messages.CallbackUri));
                 }
             }
             return Accepted();
         }
 
-        private static DmrRequest GetDmrRequest(string message, string ministry)
+        private static DmrRequest GetDmrRequest(string message, string ministry, string callbackUri)
         {
             return new DmrRequest
             {
                 Payload = new Payload
                 {
-                    CallbackUri = "https://callbackuri.fakeurl.com",
+                    CallbackUri = callbackUri,
                     Messages = new[] { message },
                     Ministry = ministry
                 }
