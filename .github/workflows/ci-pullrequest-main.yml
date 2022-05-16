@@ -87,6 +87,4 @@ jobs:
       uses: docker/setup-buildx-action@v2
     
     - name: Docker Build
-      uses: docker/build-push-action@v3
-      with:
-        push: true
+      run: docker image build src/MockClassifier.Api/
