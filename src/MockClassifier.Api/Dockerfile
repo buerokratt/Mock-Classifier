@@ -1,22 +1,15 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["MockClassifier.Api/MockClassifier.Api.csproj", "MockClassifier.Api/"]
-RUN dotnet restore "MockClassifier.Api/MockClassifier.Api.csproj"
-COPY . .
-WORKDIR "/src/MockClassifier.Api"
-RUN dotnet build "MockClassifier.Api.csproj" -c Release -o /app/build
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "MockClassifier.Api.csproj" -c Release -o /app/publish
-
-FROM base AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MockClassifier.Api.dll"]
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
