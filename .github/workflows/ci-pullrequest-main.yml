@@ -100,10 +100,12 @@ jobs:
     - name: List Docker images
       run: docker images
 
-    # - name: Sign container image with annotations from our environment
-    #   run: |
-    #     cosign sign --key cosign.key \
-    #       -a "ref=${{ github.sha }}" \
-    #       ghcr.io/your-org/your-repo:some-tag
-    #   env:
-    #     COSIGN_PASSWORD: ""
+    - name: Sign Docker image
+      run: |
+        echo $COSIGIN_KEY | base64 -di > cosign.key
+        cosign sign --key cosign.key \
+          -a "ref=${{ github.sha }}" \
+          $DOCKER_TAG_SHA
+      env:
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
