@@ -107,7 +107,10 @@ jobs:
 
     - name: Sign Docker image
       run: |
-        echo $COSIGIN_KEY | base64 -di > cosign.key
+        echo $COSIGN_KEY | base64 -di > cosign.key
+        echo "---------------"
+        tail -1 cosign.key
+        echo "***************"
         cosign sign --key cosign.key \
           -a "ref=${{ github.sha }}" \
           --upload=false \
