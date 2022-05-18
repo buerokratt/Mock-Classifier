@@ -110,6 +110,7 @@ jobs:
         echo $COSIGIN_KEY | base64 -di > cosign.key
         cosign sign --key cosign.key \
           -a "ref=${{ github.sha }}" \
+          --upload=false \
           $DOCKER_TAG_SHA
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
