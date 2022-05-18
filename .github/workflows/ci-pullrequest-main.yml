@@ -88,3 +88,14 @@ jobs:
     
     - name: Docker Build
       run: docker image build src/MockClassifier.Api/
+
+    - name: List Docker images
+      run: docker images
+
+    # - name: Sign container image with annotations from our environment
+    #   run: |
+    #     cosign sign --key cosign.key \
+    #       -a "ref=${{ github.sha }}" \
+    #       ghcr.io/your-org/your-repo:some-tag
+    #   env:
+    #     COSIGN_PASSWORD: ""
