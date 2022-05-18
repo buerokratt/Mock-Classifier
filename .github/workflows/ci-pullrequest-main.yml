@@ -100,6 +100,11 @@ jobs:
     - name: List Docker images
       run: docker images
 
+    - name: Install cosign
+      uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
+      with:
+        cosign-release: 'v1.7.1'
+
     - name: Sign Docker image
       run: |
         echo $COSIGIN_KEY | base64 -di > cosign.key
