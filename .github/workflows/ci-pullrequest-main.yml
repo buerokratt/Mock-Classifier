@@ -112,6 +112,9 @@ jobs:
     - name: Log in to GitHub container registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
+    - name: Push Docker image to ghcr
+      run: docker push $DOCKER_TAG_SHA
+
     - name: Sign Docker image
       run: |
         echo $COSIGN_KEY | base64 -di > cosign.key
