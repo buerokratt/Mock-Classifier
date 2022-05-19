@@ -111,11 +111,10 @@ jobs:
     - name: Sign Docker image
       run: |
         echo $COSIGN_KEY | base64 -di > cosign.key
-        cosign sign \
+        cosign sign --key cosign.key \
           -a "ref=${{ github.sha }}" \
           --upload=false \
           $DOCKER_TAG_SHA
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
-        COSIGN_EXPERIMENTAL: "true"
