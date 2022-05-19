@@ -1,9 +1,6 @@
 name: Mock Classifier CI Pipeline
 
 on:
-  push:
-    branches:
-      - feature/23-mclassifier-sign-docker-image
   pull_request:
     branches: [ main ]
 
