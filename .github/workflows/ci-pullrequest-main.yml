@@ -82,6 +82,10 @@ jobs:
   PackageDeploy:
     runs-on: ubuntu-latest
     needs: BuildTest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     steps:
     - uses: actions/checkout@v3
