@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Models;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
-using System.Linq;
 using Xunit;
 
 namespace MockClassifier.UnitTests
