@@ -105,6 +105,9 @@ jobs:
       with:
         cosign-release: 'v1.7.1'
 
+    - name: Log in to GitHub container registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
     - name: Sign Docker image
       run: |
         echo $COSIGN_KEY | base64 -di > cosign.key
