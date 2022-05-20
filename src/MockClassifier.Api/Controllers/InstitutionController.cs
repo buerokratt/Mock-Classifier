@@ -26,15 +26,11 @@ namespace MockClassifier.Api.Controllers
         /// <param name="messages">Property which contains an array of strings representing a user message in each string</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
-        public AcceptedResult Post([FromBody] MessagesInput messages)
+        public IActionResult Post([FromBody] MessagesInput messages)
         {
             if (messages == null)
             {
-        var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
-        {
-            ReasonPhrase = "Message input empty"
-        };
-        throw new HttpResponseException(resp);
+                return BadRequest(ModelState);
             }
 
             foreach (var message in messages.Messages)
