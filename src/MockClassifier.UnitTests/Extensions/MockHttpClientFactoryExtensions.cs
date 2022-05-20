@@ -11,7 +11,7 @@ namespace MockClassifier.UnitTests.Extensions
             this Mock<IHttpClientFactory> mockHttpClientFactory,
             MockHttpMessageHandler messageHandler)
         {
-            mockHttpClientFactory
+            _ = mockHttpClientFactory
                 .Setup(m => m.CreateClient(It.IsAny<string>()))
                 .Returns(() =>
                 {

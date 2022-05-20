@@ -1,5 +1,6 @@
 ﻿using MockClassifier.Api.Models;
 using MockClassifier.Api.Interfaces;
+using System.Globalization;
 
 namespace MockClassifier.Api.Services
 {
@@ -8,9 +9,11 @@ namespace MockClassifier.Api.Services
         public string[] Classify(string messageBody)
         {
             if (string.IsNullOrEmpty(messageBody))
-                return Array.Empty<string>(); 
+            {
+                return Array.Empty<string>();
+            }
 
-            var ministry = messageBody.ToLower() switch
+            var ministry = messageBody.ToLower(CultureInfo.CurrentCulture) switch
             {
                 "i want to register my child at school" => Ministry.education.ToString(),
                 "how do i file my annual tax information" => Ministry.economic.ToString(),
@@ -20,10 +23,7 @@ namespace MockClassifier.Api.Services
                 "i wish to understand what benefits my family are entitled to" => Ministry.social.ToString(),
                 _ => null,
             };
-            if (ministry == null)
-                return Array.Empty<string>();
-            else
-                return new string[] { ministry };
+            return ministry == null ? Array.Empty<string>() : (new string[] { ministry });
         }
     }
 }

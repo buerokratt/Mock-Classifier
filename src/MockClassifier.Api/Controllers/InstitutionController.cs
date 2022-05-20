@@ -28,20 +28,25 @@ namespace MockClassifier.Api.Controllers
         [HttpPost]
         public AcceptedResult Post([FromBody] MessagesInput messages)
         {
-            foreach( var message in messages.Messages)
+            if (messages == null)
+            {
+                throw new ArgumentNullException(nameof(messages));
+            }
+
+            foreach (var message in messages.Messages)
             {
                 List<string> ministries = _naturalLanguageService.Classify(message).ToList();
                 ministries = ministries.Concat(_tokenService.Classify(message).ToList()).ToList();
 
                 foreach (var ministry in ministries)
                 {
-                     _dmrService.RecordRequest(GetDmrRequest(message, ministry, messages.CallbackUri));
+                    _dmrService.RecordRequest(GetDmrRequest(message, ministry, messages.CallbackUri));
                 }
             }
             return Accepted();
         }
 
-        private static DmrRequest GetDmrRequest(string message, string ministry, string callbackUri)
+        private static DmrRequest GetDmrRequest(string message, string ministry, Uri callbackUri)
         {
             return new DmrRequest
             {

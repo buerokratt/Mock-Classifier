@@ -6,7 +6,7 @@ namespace MockClassifier.Api.Models
     [ExcludeFromCodeCoverage]
     public class MessagesInput
     {
-        public string CallbackUri { get; set; }
-        public string[] Messages { get; set; }
+        public Uri CallbackUri { get; set; }
+        public IEnumerable<string> Messages { get; set; }
     }
 }

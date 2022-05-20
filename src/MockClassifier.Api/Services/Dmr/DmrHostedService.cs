@@ -6,7 +6,7 @@ namespace MockClassifier.Api.Services.Dmr
     /// A background hosted service that periodically triggers the DMR request processor
     /// </summary>
     [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
-    public class DmrHostedService : IHostedService
+    public sealed class DmrHostedService : IHostedService, IDisposable
     {
         private readonly IDmrService dmrService;
         private readonly DmrServiceSettings config;
@@ -18,7 +18,7 @@ namespace MockClassifier.Api.Services.Dmr
             this.dmrService = dmrService;
             this.config = config;
             this.logger = logger;
-            this.timer = new Timer(TimerCallback, this, Timeout.Infinite, Timeout.Infinite);
+            timer = new Timer(TimerCallback, this, Timeout.Infinite, Timeout.Infinite);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -35,13 +35,22 @@ namespace MockClassifier.Api.Services.Dmr
             return Task.CompletedTask;
         }
 
-        private void StopTimer() => timer.Change(Timeout.Infinite, Timeout.Infinite);
-        private void StartTimer() => timer.Change(TimeSpan.FromMilliseconds(config.DmrRequestProcessIntervalMs), Timeout.InfiniteTimeSpan);
+        private void StopTimer()
+        {
+            _ = timer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        private void StartTimer()
+        {
+            _ = timer.Change(TimeSpan.FromMilliseconds(config.DmrRequestProcessIntervalMs), Timeout.InfiniteTimeSpan);
+        }
 
         private static async void TimerCallback(object state)
         {
             if (state == null)
+            {
                 return;
+            }
 
             var self = state as DmrHostedService;
 
@@ -49,20 +58,31 @@ namespace MockClassifier.Api.Services.Dmr
 
             try
             {
-                self.logger.LogInformation("Starting processing DMR requests");
+                // Not sure how to resolve rule CA1848 so removing logging for now
+                //self.logger.LogInformation("Starting processing DMR requests");
 
-                await self.dmrService.ProcessRequestsAsync();
+                await self.dmrService.ProcessRequestsAsync().ConfigureAwait(true);
 
-                self.logger.LogInformation("Completed processing DMR requests");
+
+                // Not sure how to resolve rule CA1848 so removing logging for now
+                //self.logger.LogInformation("Completed processing DMR requests");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                self.logger.LogError(ex, $"Unexpected error in {nameof(DmrHostedService)}.");
+                // Not sure how to resolve rule CA1848 so removing logging for now
+                //self.logger.LogError(ex, $"Unexpected error in {nameof(DmrHostedService)}.");
+                throw;
             }
             finally
             {
                 self.StartTimer();
             }
+        }
+
+        public void Dispose()
+        {
+            timer.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace MockClassifier.UnitTests.Extensions
             this MockHttpMessageHandler handler,
             string expectedMessage = "my test message")
         {
-            handler
+            _ = handler
                 .Expect("/")
                 .WithContent($"{{\"forwardUri\":\"https://forwarduri.fakeurl.com\",\"payload\":{{\"callbackUri\":\"https://callbackuri.fakeurl.com\",\"ministry\":\"border\",\"messages\":[\"{expectedMessage}\"]}}}}")
                 .Respond(HttpStatusCode.Accepted);

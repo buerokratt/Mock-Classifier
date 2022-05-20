@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 namespace MockClassifier.Api.Services.Dmr
 {
@@ -15,10 +14,19 @@ namespace MockClassifier.Api.Services.Dmr
 
         public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger)
         {
-            this.httpClient = httpClientFactory.CreateClient(config.ClientName);
+            if (httpClientFactory == null)
+            {
+                throw new ArgumentNullException(nameof(httpClientFactory));
+            }
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            httpClient = httpClientFactory.CreateClient(config.ClientName);
             this.logger = logger;
 
-            this.requests = new ConcurrentQueue<DmrRequest>();
+            requests = new ConcurrentQueue<DmrRequest>();
         }
 
         public void RecordRequest(DmrRequest request)
@@ -32,14 +40,17 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    var response = await httpClient.PostAsJsonAsync("/", request);
-                    response.EnsureSuccessStatusCode();
+                    var response = await httpClient.PostAsJsonAsync("/", request).ConfigureAwait(true);
+                    _ = response.EnsureSuccessStatusCode();
 
-                    logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {string.Join(", ", request.Payload.Messages)}");
+
+                    // Not sure how to resolve rule CA1848 so removing logging for now
+                    //logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {string.Join(", ", request.Payload.Messages)}");
                 }
-                catch (Exception exception)
+                catch (HttpRequestException)
                 {
-                    logger.LogError(exception, "Call to DMR Service failed");
+                    // Not sure how to resolve rule CA1848 so removing logging for now
+                    //logger.LogError(exception, "Call to DMR Service failed");
                 }
             }
         }

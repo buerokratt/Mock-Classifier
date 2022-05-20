@@ -16,15 +16,20 @@ namespace MockClassifier.Api.Services.Dmr.Extensions
         /// <param name="settings">A settings object for the <see cref="DmrService"/></param>
         public static void AddDmrService(this IServiceCollection services, DmrServiceSettings settings)
         {
-            services.AddHttpClient(settings.ClientName, client =>
+            if (settings == null)
             {
-                client.BaseAddress = new Uri(settings.DmrApiUri);
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            _ = services.AddHttpClient(settings.ClientName, client =>
+            {
+                client.BaseAddress = settings.DmrApiUri;
                 client.Timeout = TimeSpan.FromMilliseconds(settings.HttpRequestTimeoutMs);
             });
 
             services.TryAddSingleton(settings);
             services.TryAddSingleton<IDmrService, DmrService>();
-            services.AddHostedService<DmrHostedService>();
+            _ = services.AddHostedService<DmrHostedService>();
         }
     }
 }
