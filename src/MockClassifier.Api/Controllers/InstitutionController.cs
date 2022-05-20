@@ -30,7 +30,11 @@ namespace MockClassifier.Api.Controllers
         {
             if (messages == null)
             {
-                throw new ArgumentNullException(nameof(messages));
+        var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            ReasonPhrase = "Message input empty"
+        };
+        throw new HttpResponseException(resp);
             }
 
             foreach (var message in messages.Messages)
