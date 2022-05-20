@@ -95,10 +95,8 @@ jobs:
         echo "DOCKER_TAG_SHA=ghcr.io/buerokratt/mock-classifier:${GITHUB_SHA}" >> $GITHUB_ENV
     
     - name: Docker Build
-      run: docker image build src/MockClassifier.Api/ --tag $DOCKER_TAG_SHA
-
-    - name: List Docker images
-      run: docker images
+      working-directory: src/MockClassifier.Api/
+      run: docker image build --tag $DOCKER_TAG_SHA .
 
     - name: Install cosign
       uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
