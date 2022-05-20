@@ -16,7 +16,7 @@ namespace MockClassifier.Api.Services.Dmr
         /// <summary>
         /// The destination URI for the <see cref="Payload"/>
         /// </summary>
-        public string ForwardUri { get; set; }
+        public Uri ForwardUri { get; set; }
 
         /// <summary>
         /// The payload being sent to the <see cref="ForwardUri"/>
@@ -33,7 +33,7 @@ namespace MockClassifier.Api.Services.Dmr
         /// <summary>
         /// The callback URI
         /// </summary>
-        public string CallbackUri { get; set; }
+        public Uri CallbackUri { get; set; }
 
         /// <summary>
         /// The ministry that should handle this payload
@@ -43,6 +43,6 @@ namespace MockClassifier.Api.Services.Dmr
         /// <summary>
         /// One or more messages being sent to the DMR
         /// </summary>
-        public string[] Messages { get; set; }
+        public IEnumerable<string> Messages { get; set; }
     }
 }

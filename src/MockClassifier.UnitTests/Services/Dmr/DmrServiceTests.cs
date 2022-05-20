@@ -11,21 +11,19 @@ using Xunit;
 
 namespace MockClassifier.UnitTests.Services.Dmr
 {
-    public class DmrServiceTests
+    public sealed class DmrServiceTests : IDisposable
     {
-        private static readonly DmrServiceSettings DefaultServiceConfig = new DmrServiceSettings
+        private static readonly DmrServiceSettings DefaultServiceConfig = new()
         {
-            DmrApiUri = "https://dmr.fakeurl.com"
+            DmrApiUri = new Uri("https://dmr.fakeurl.com")
         };
-
-        private readonly Mock<IHttpClientFactory> httpClientFactory = new Mock<IHttpClientFactory>();
-        private readonly MockHttpMessageHandler httpMessageHandler = new MockHttpMessageHandler();
-        private readonly Mock<ILogger<DmrService>> logger = new Mock<ILogger<DmrService>>();
+        private readonly MockHttpMessageHandler httpMessageHandler = new();
+        private readonly Mock<ILogger<DmrService>> logger = new();
 
         [Fact]
-        public async Task ShouldCallDmrApiWithGivenRequest_WhenRequestIsRecorded()
+        public async Task ShouldCallDmrApiWithGivenRequestWhenRequestIsRecorded()
         {
-            httpMessageHandler.SetupWithMessage();
+            _ = httpMessageHandler.SetupWithMessage();
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
@@ -33,35 +31,35 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync();
+            await sut.ProcessRequestsAsync().ConfigureAwait(true);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
 
         [Fact]
-        public async Task ShouldCallDmrApiForEachGivenRequest_WhenMultipleRequestsAreRecorded()
+        public async Task ShouldCallDmrApiForEachGivenRequestWhenMultipleRequestsAreRecorded()
         {
-            httpMessageHandler
+            _ = httpMessageHandler
                 .SetupWithMessage("my first message")
                 .SetupWithMessage("my second message");
-            
+
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
             var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
-            
+
             sut.RecordRequest(GetDmrRequest("my first message"));
             sut.RecordRequest(GetDmrRequest("my second message"));
 
-            await sut.ProcessRequestsAsync();
+            await sut.ProcessRequestsAsync().ConfigureAwait(true);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
 
         [Fact]
-        public async Task ShouldNotThrowException_WhenCallToDmrApiErrors()
+        public async Task ShouldNotThrowExceptionWhenCallToDmrApiErrors()
         {
-            var dmrHttpClient = new MockHttpMessageHandler();
-            dmrHttpClient.When("/").Respond(HttpStatusCode.BadGateway);
+            using var dmrHttpClient = new MockHttpMessageHandler();
+            _ = dmrHttpClient.When("/").Respond(HttpStatusCode.BadGateway);
 
             var clientFactory = GetHttpClientFactory(dmrHttpClient);
 
@@ -69,20 +67,20 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync();
+            await sut.ProcessRequestsAsync().ConfigureAwait(true);
         }
 
-        private Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler, DmrServiceSettings settings = null)
+        private static Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler, DmrServiceSettings settings = null)
         {
-            settings = settings ?? DefaultServiceConfig;
+            settings ??= DefaultServiceConfig;
 
             var mockHttpClientFactory = new Mock<IHttpClientFactory>();
-            mockHttpClientFactory
+            _ = mockHttpClientFactory
                 .Setup(m => m.CreateClient(It.IsAny<string>()))
                 .Returns(() =>
                 {
                     var client = messageHandler.ToHttpClient();
-                    client.BaseAddress = new Uri(settings.DmrApiUri);
+                    client.BaseAddress = settings.DmrApiUri;
 
                     return client;
                 });
@@ -91,18 +89,24 @@ namespace MockClassifier.UnitTests.Services.Dmr
         }
 
 
-        private DmrRequest GetDmrRequest(string message = "my test message")
+        private static DmrRequest GetDmrRequest(string message = "my test message")
         {
             return new DmrRequest
             {
-                ForwardUri = "https://forwarduri.fakeurl.com",
+                ForwardUri = new Uri("https://forwarduri.fakeurl.com"),
                 Payload = new Payload
                 {
-                    CallbackUri = "https://callbackuri.fakeurl.com",
+                    CallbackUri = new Uri("https://callbackuri.fakeurl.com"),
                     Messages = new[] { message },
                     Ministry = "border"
                 }
             };
+        }
+
+        public void Dispose()
+        {
+            httpMessageHandler.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

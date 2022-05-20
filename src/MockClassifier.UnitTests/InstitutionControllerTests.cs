@@ -4,6 +4,7 @@ using MockClassifier.Api.Models;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
+using System;
 using Xunit;
 
 namespace MockClassifier.UnitTests
@@ -17,30 +18,30 @@ namespace MockClassifier.UnitTests
 
         public InstitutionControllerTests()
         {
-            dmrService= new Mock<IDmrService>();
+            dmrService = new Mock<IDmrService>();
             sut = new InstitutionController(dmrService.Object, tokenService, naturalLanguageService);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData("message1")]
-        [InlineData("message1","message2")]
+        [InlineData("message1", "message2")]
         public void ReturnsAccepted(params string[] messages)
         {
             // Arrange
             var request = new MessagesInput
             {
-                CallbackUri = "https://callback.fakeurl.com",
+                CallbackUri = new Uri("https://callback.fakeurl.com"),
                 Messages = messages
             };
 
-            dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
             var result = sut.Post(request);
 
             // Assert
-            Assert.IsType<AcceptedResult>(result);
+            _ = Assert.IsType<AcceptedResult>(result);
             dmrService.VerifyNoOtherCalls();
         }
 
@@ -51,17 +52,17 @@ namespace MockClassifier.UnitTests
             // Arrange
             var request = new MessagesInput
             {
-                CallbackUri = "https://callback.fakeurl.com",
+                CallbackUri = new Uri("https://callback.fakeurl.com"),
                 Messages = messages
             };
 
-            dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
             var result = sut.Post(request);
 
             // Assert
-            Assert.IsType<AcceptedResult>(result);
+            _ = Assert.IsType<AcceptedResult>(result);
             dmrService.Verify(x => x.RecordRequest(It.IsAny<DmrRequest>()), Times.Once());
         }
     }

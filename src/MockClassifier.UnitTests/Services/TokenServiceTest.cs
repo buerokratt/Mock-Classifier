@@ -1,9 +1,8 @@
-using Xunit;
-using MockClassifier.Api.Services;
 using MockClassifier.Api.Models;
+using MockClassifier.Api.Services;
 using System;
 using System.Linq;
-using System.Collections.Generic;
+using Xunit;
 
 namespace MockClassifier.UnitTests.Services
 {
@@ -19,14 +18,14 @@ namespace MockClassifier.UnitTests.Services
         [Theory]
         [InlineData("<education>", new string[] { "education" })]
         [InlineData("Please return the <social> ministry", new string[] { "social" })]
-        [InlineData("I want to see <rural><social> and <environment>", new string[] {"rural","social", "environment" })]
-        [InlineData("<rural> please", new string[] {"rural"}) ]
+        [InlineData("I want to see <rural><social> and <environment>", new string[] { "rural", "social", "environment" })]
+        [InlineData("<rural> please", new string[] { "rural" })]
         [InlineData("Please return < environment>", new string[] { })]
         [InlineData("Please return <educationandresearch>", new string[] { })]
-        [InlineData("<Please return <education,social>",new string[] {})]
+        [InlineData("<Please return <education,social>", new string[] { })]
         [InlineData("", new string[] { })]
 
-        public void TestClassify( string messageBody, string[] expectedTokens)
+        public void TestClassify(string messageBody, string[] expectedTokens)
         {
             var result = tokenService.Classify(messageBody);
             Assert.Equal(expectedTokens, result);
@@ -41,7 +40,7 @@ namespace MockClassifier.UnitTests.Services
             var expectedMinistries = Enum.GetValues(typeof(Ministry))
                                     .Cast<Ministry>()
                                     .ToList();
-            Assert.Contains((Ministry)Enum.Parse<Ministry>(result[0]), expectedMinistries);
+            Assert.Contains(Enum.Parse<Ministry>(result[0]), expectedMinistries);
         }
     }
 }

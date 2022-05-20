@@ -5,10 +5,10 @@ using MockClassifier.Api.Services.Dmr;
 using MockClassifier.Api.Services.Dmr.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MockClassifierr.Api
+namespace MockClassifier.Api
 {
     [ExcludeFromCodeCoverage] // This is not solution code, no need for unit tests
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -24,24 +24,24 @@ namespace MockClassifierr.Api
             services.TryAddSingleton<ITokenService, TokenService>();
             services.TryAddSingleton<INaturalLanguageService, NaturalLanguageService>();
 
-            services.AddControllers();
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            _ = services.AddControllers();
+            _ = services.AddEndpointsApiExplorer();
+            _ = services.AddSwaggerGen();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                _ = app.UseSwagger();
+                _ = app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            _ = app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            _ = app.UseAuthorization();
 
-            app.MapControllers();
+            _ = app.MapControllers();
 
             app.Run();
         }

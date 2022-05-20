@@ -12,7 +12,7 @@
         /// <summary>
         /// The base URI for the DMR REST API
         /// </summary>
-        public string DmrApiUri { get; set; }
+        public Uri DmrApiUri { get; set; }
 
         /// <summary>
         /// The name of the <see cref="HttpClient"/> for the <see cref="DmrService"/>
