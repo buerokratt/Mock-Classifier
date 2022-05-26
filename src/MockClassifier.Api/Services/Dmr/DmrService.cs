@@ -1,4 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
 
 namespace MockClassifier.Api.Services.Dmr
 {
@@ -41,7 +44,27 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    var response = await httpClient.PostAsJsonAsync("/app/fromclassifier", request.Payload).ConfigureAwait(true);
+                    // Setup uri
+                    var uri = new Uri(httpClient.BaseAddress + "/app/fromclassifier");
+
+                    // Setup content
+                    var jsonPayload = JsonSerializer.Serialize(request.Payload);
+                    using var content = new StringContent(jsonPayload, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+                    // Setup message
+                    using var requestMessage = new HttpRequestMessage()
+                    {
+                        Method = HttpMethod.Post,
+                        Content = content,
+                        RequestUri = uri
+                    };
+                    requestMessage.Headers.Add("X-Message-Id", request.Headers.MessageId);
+                    requestMessage.Headers.Add("X-Message-Id-Ref", request.Headers.MessageIdRef);
+                    requestMessage.Headers.Add("X-Sent-By", request.Headers.SendTo);
+                    requestMessage.Headers.Add("X-Send-To", request.Headers.SentBy);
+
+                    // Send request
+                    var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(true);
                     _ = response.EnsureSuccessStatusCode();
 
 
