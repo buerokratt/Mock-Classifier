@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using MockClassifier.Api.Models;
+using System.Collections.Concurrent;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -45,7 +46,7 @@ namespace MockClassifier.Api.Services.Dmr
                 try
                 {
                     // Setup uri
-                    var uri = new Uri(httpClient.BaseAddress + "/app/fromclassifier");
+                    //var uri = new Uri(httpClient.BaseAddress + "/app/fromclassifier");
 
                     // Setup content
                     var jsonPayload = JsonSerializer.Serialize(request.Payload);
@@ -56,12 +57,11 @@ namespace MockClassifier.Api.Services.Dmr
                     {
                         Method = HttpMethod.Post,
                         Content = content,
-                        RequestUri = uri
                     };
-                    requestMessage.Headers.Add("X-Message-Id", request.Headers.MessageId);
-                    requestMessage.Headers.Add("X-Message-Id-Ref", request.Headers.MessageIdRef);
-                    requestMessage.Headers.Add("X-Sent-By", request.Headers.SendTo);
-                    requestMessage.Headers.Add("X-Send-To", request.Headers.SentBy);
+                    requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers.MessageId);
+                    requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers.MessageIdRef);
+                    requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers.SendTo);
+                    requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers.SentBy);
 
                     // Send request
                     var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(true);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
 using MockClassifier.Api.Services.Dmr;
 
 namespace MockClassifier.Api.Controllers
@@ -54,10 +55,10 @@ namespace MockClassifier.Api.Controllers
         private static DmrRequest GetDmrRequest(string message, string classification, IHeaderDictionary headers)
         {
             // Setup headers
-            _ = headers.TryGetValue("X-Sent-By", out var sentByHeader);
-            _ = headers.TryGetValue("X-Message-Id", out var messageidHeader);
-            _ = headers.TryGetValue("X-Send-To", out var sendToHeader);
-            _ = headers.TryGetValue("X-Message-Id-Ref", out var messageidRefHeader);
+            _ = headers.TryGetValue(Constants.SentByHeaderKey, out var sentByHeader);
+            _ = headers.TryGetValue(Constants.MessageIdHeaderKey, out var messageidHeader);
+            _ = headers.TryGetValue(Constants.SendToHeaderKey, out var sendToHeader);
+            _ = headers.TryGetValue(Constants.MessageIdRefHeaderKey, out var messageidRefHeader);
             var dmrHeaders = new DmrRequestHeaders()
             {
                 SentBy = sentByHeader,
