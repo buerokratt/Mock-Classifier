@@ -3,18 +3,18 @@
 namespace MockClassifier.Api.Services.Dmr
 {
     /// <summary>
-    /// The model for the DMR API enpoint including headers and body
+    /// The model for Dmr requests, including headers and payload/body
     /// </summary>
     [ExcludeFromCodeCoverage] // No logic so not appropriate for code coverage
     public record DmrRequest
     {
         /// <summary>
-        /// Name of the participant that sent the message.
+        /// The headers  of requests to or from Dmr
         /// </summary>
-        public string SentBy { get; set; }
+        public DmrRequestHeaders Headers { get; set; }
 
         /// <summary>
-        /// The payload being sent to the <see cref="ForwardUri"/>
+        /// The payload (request body) of requests to or from Dmr
         /// </summary>
         public DmrRequestPayload Payload { get; set; }
     }

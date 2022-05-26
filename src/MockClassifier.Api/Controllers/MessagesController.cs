@@ -20,9 +20,9 @@ namespace MockClassifier.Api.Controllers
         }
 
         /// <summary>
-        /// Processes an array of strings to identify corresponding ministries and issues call backs to DMR for each message.
+        /// Processes a string to identify classifications and issues call backs to Dmr for each classification.
         /// </summary>
-        /// <param name="messages">Property which contains an array of strings representing a user message in each string</param>
+        /// <param name="payload">Property which contains the payload containing the message to be classified</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
         public IActionResult Post([FromBody] DmrRequestPayload payload)
@@ -44,19 +44,39 @@ namespace MockClassifier.Api.Controllers
             return Accepted();
         }
 
+        /// <summary>
+        /// Builds a DmrRequest object from parameters
+        /// </summary>
+        /// <param name="message">The message to go into the .Payload.Message property</param>
+        /// <param name="classification">The classification to go into the .Payload.Classification property</param>
+        /// <param name="headers">The header collection from the origional Request. Used to create the .Header object</param>
+        /// <returns>A DmrRequest object</returns>
         private static DmrRequest GetDmrRequest(string message, string classification, IHeaderDictionary headers)
         {
-            // Grab headers
+            // Setup headers
             _ = headers.TryGetValue("X-Sent-By", out var sentByHeader);
+            _ = headers.TryGetValue("X-Message-Id", out var messageidHeader);
+            _ = headers.TryGetValue("X-Send-To", out var sendToHeader);
+            _ = headers.TryGetValue("X-Message-Id-Ref", out var messageidRefHeader);
+            var dmrHeaders = new DmrRequestHeaders()
+            {
+                SentBy = sentByHeader,
+                MessageId = messageidHeader,
+                SendTo = sendToHeader,
+                MessageIdRef = messageidRefHeader,
+            };
+
+            // Setup payload
+            var dmrPaylod = new DmrRequestPayload()
+            {
+                Message = message,
+                Classification = classification
+            };
 
             return new DmrRequest
             {
-                SentBy = sentByHeader,
-                Payload = new DmrRequestPayload
-                {
-                    Message = message,
-                    Classification = classification
-                }
+                Headers = dmrHeaders,
+                Payload = dmrPaylod
             };
         }
     }
