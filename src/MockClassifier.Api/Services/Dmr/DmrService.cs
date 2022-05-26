@@ -24,6 +24,7 @@ namespace MockClassifier.Api.Services.Dmr
             }
 
             httpClient = httpClientFactory.CreateClient(config.ClientName);
+            httpClient.BaseAddress = config.DmrApiUri;
             this.logger = logger;
 
             requests = new ConcurrentQueue<DmrRequest>();
@@ -40,7 +41,7 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    var response = await httpClient.PostAsJsonAsync("/", request).ConfigureAwait(true);
+                    var response = await httpClient.PostAsJsonAsync("/app/FromClassifier", request.Payload).ConfigureAwait(true);
                     _ = response.EnsureSuccessStatusCode();
 
 
