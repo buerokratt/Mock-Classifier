@@ -45,9 +45,6 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    // Setup uri
-                    //var uri = new Uri(httpClient.BaseAddress + "/app/fromclassifier");
-
                     // Setup content
                     var jsonPayload = JsonSerializer.Serialize(request.Payload);
                     using var content = new StringContent(jsonPayload, Encoding.UTF8, MediaTypeNames.Application.Json);
