@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
-using MockClassifier.Api.Models;
 using MockClassifier.Api.Services.Dmr;
 
 namespace MockClassifier.Api.Controllers
 {
-    [Route("input-from-dmr/institution")]
+    [Route("/dmr-api/messages")]
     [ApiController]
-    public class InstitutionController : ControllerBase
+    public class MessagesController : ControllerBase
     {
         private readonly IDmrService _dmrService;
         private readonly ITokenService _tokenService;
         private readonly INaturalLanguageService _naturalLanguageService;
 
-        public InstitutionController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService)
+        public MessagesController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService)
         {
             _dmrService = dmrService;
             _tokenService = tokenService;
@@ -26,35 +25,37 @@ namespace MockClassifier.Api.Controllers
         /// <param name="messages">Property which contains an array of strings representing a user message in each string</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
-        public IActionResult Post([FromBody] MessagesInput messages)
+        public IActionResult Post([FromBody] DmrRequestPayload payload)
         {
-            if (messages == null)
+            if (payload == null)
             {
                 return BadRequest(ModelState);
             }
 
-            foreach (var message in messages.Messages)
-            {
-                List<string> ministries = _naturalLanguageService.Classify(message).ToList();
-                ministries = ministries.Concat(_tokenService.Classify(message).ToList()).ToList();
+            List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
+            classifications = classifications.Concat(_tokenService.Classify(payload.Message).ToList()).ToList();
 
-                foreach (var ministry in ministries)
-                {
-                    _dmrService.RecordRequest(GetDmrRequest(message, ministry, messages.CallbackUri));
-                }
+            foreach (var classification in classifications)
+            {
+                var dmrRequest = GetDmrRequest(payload.Message, classification, Request.Headers);
+                _dmrService.RecordRequest(dmrRequest);
             }
+
             return Accepted();
         }
 
-        private static DmrRequest GetDmrRequest(string message, string ministry, Uri callbackUri)
+        private static DmrRequest GetDmrRequest(string message, string classification, IHeaderDictionary headers)
         {
+            // Grab headers
+            _ = headers.TryGetValue("X-Sent-By", out var sentByHeader);
+
             return new DmrRequest
             {
-                Payload = new Payload
+                SentBy = sentByHeader,
+                Payload = new DmrRequestPayload
                 {
-                    CallbackUri = callbackUri,
-                    Messages = new[] { message },
-                    Ministry = ministry
+                    Message = message,
+                    Classification = classification
                 }
             };
         }
