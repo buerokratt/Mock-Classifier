@@ -41,7 +41,7 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    var response = await httpClient.PostAsJsonAsync("/app/FromClassifier", request.Payload).ConfigureAwait(true);
+                    var response = await httpClient.PostAsJsonAsync("/", request.Payload).ConfigureAwait(true);
                     _ = response.EnsureSuccessStatusCode();
 
 
