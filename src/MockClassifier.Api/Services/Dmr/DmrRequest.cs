@@ -2,47 +2,20 @@
 
 namespace MockClassifier.Api.Services.Dmr
 {
-    /**
-     * NOTE:
-     * These models live here temporarily until they can be referenced via a NuGet package library
-     */
-
     /// <summary>
-    /// The model for the DMR API endpoint
+    /// The model for the DMR API enpoint including headers and body
     /// </summary>
-    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
+    [ExcludeFromCodeCoverage] // No logic so not appropriate for code coverage
     public record DmrRequest
     {
         /// <summary>
-        /// The destination URI for the <see cref="Payload"/>
+        /// Name of the participant that sent the message.
         /// </summary>
-        public Uri ForwardUri { get; set; }
+        public string SentBy { get; set; }
 
         /// <summary>
         /// The payload being sent to the <see cref="ForwardUri"/>
         /// </summary>
-        public Payload Payload { get; set; }
-    }
-
-    /// <summary>
-    /// The payload that the DMR handles
-    /// </summary>
-    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
-    public record Payload
-    {
-        /// <summary>
-        /// The callback URI
-        /// </summary>
-        public Uri CallbackUri { get; set; }
-
-        /// <summary>
-        /// The ministry that should handle this payload
-        /// </summary>
-        public string Ministry { get; set; }
-
-        /// <summary>
-        /// One or more messages being sent to the DMR
-        /// </summary>
-        public IEnumerable<string> Messages { get; set; }
+        public DmrRequestPayload Payload { get; set; }
     }
 }
