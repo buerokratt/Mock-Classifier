@@ -4,6 +4,7 @@ using MockClassifier.UnitTests.Extensions;
 using Moq;
 using RichardSzalay.MockHttp;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -91,16 +92,16 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
         private static DmrRequest GetDmrRequest(string message = "my test message")
         {
-            return new DmrRequest
+            var request = new DmrRequest(new Dictionary<string, string>())
             {
-                ForwardUri = new Uri("https://forwarduri.fakeurl.com"),
-                Payload = new Payload
+                Payload = new DmrRequestPayload
                 {
-                    CallbackUri = new Uri("https://callbackuri.fakeurl.com"),
-                    Messages = new[] { message },
-                    Ministry = "border"
+                    Message = message,
+                    Classification = "border"
                 }
             };
+
+            return request;
         }
 
         public void Dispose()

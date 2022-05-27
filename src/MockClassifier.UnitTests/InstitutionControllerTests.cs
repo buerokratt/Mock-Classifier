@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Controllers;
-using MockClassifier.Api.Models;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
@@ -11,7 +10,7 @@ namespace MockClassifier.UnitTests
 {
     public class InstitutionControllerTests
     {
-        private readonly InstitutionController sut;
+        private readonly MessagesController sut;
         private readonly Mock<IDmrService> dmrService = new();
         private readonly TokenService tokenService = new();
         private readonly NaturalLanguageService naturalLanguageService = new();
@@ -19,20 +18,19 @@ namespace MockClassifier.UnitTests
         public InstitutionControllerTests()
         {
             dmrService = new Mock<IDmrService>();
-            sut = new InstitutionController(dmrService.Object, tokenService, naturalLanguageService);
+            sut = new MessagesController(dmrService.Object, tokenService, naturalLanguageService);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData("message1")]
-        [InlineData("message1", "message2")]
-        public void ReturnsAccepted(params string[] messages)
+        public void ReturnsAccepted(string message)
         {
             // Arrange
-            var request = new MessagesInput
+            var request = new DmrRequestPayload
             {
-                CallbackUri = new Uri("https://callback.fakeurl.com"),
-                Messages = messages
+                Message = message,
+                Classification = string.Empty
             };
 
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
@@ -47,13 +45,13 @@ namespace MockClassifier.UnitTests
 
         [Theory]
         [InlineData("<defence>")]
-        public void VerifyDmrRequest(params string[] messages)
+        public void VerifyDmrRequest(string message)
         {
             // Arrange
-            var request = new MessagesInput
+            var request = new DmrRequestPayload
             {
-                CallbackUri = new Uri("https://callback.fakeurl.com"),
-                Messages = messages
+                Message = message,
+                Classification = string.Empty
             };
 
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));

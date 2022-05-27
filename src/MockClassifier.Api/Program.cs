@@ -23,6 +23,7 @@ namespace MockClassifier.Api
             services.AddDmrService(dmrSettings);
             services.TryAddSingleton<ITokenService, TokenService>();
             services.TryAddSingleton<INaturalLanguageService, NaturalLanguageService>();
+            services.TryAddSingleton<IEncodingService, EncodingService>();
 
             _ = services.AddControllers();
             _ = services.AddEndpointsApiExplorer();
