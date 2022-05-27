@@ -15,7 +15,23 @@ paths:
       operationId: post-messages
       responses:
         '202':
-          description: Accepted
+          description: '*Response body added for clarity, actual response will be provided with a separate callback request.'
+          content:
+            application/vnd.classifier.classification+json;version=1:
+              schema:
+                title: Classification
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Greetings from Estonia!
+                  classification:
+                    type: string
+                    example: NLib
+                    readOnly: true
+                required:
+                  - message
+                  - classification
       parameters:
         - name: X-Sent-By
           in: header
@@ -49,7 +65,7 @@ paths:
       description: ''
       requestBody:
         content:
-          application/x.classifier.classification+json;version=1:
+          application/vnd.classifier.classification+json;version=1:
             schema:
               title: Classification
               type: object
@@ -61,8 +77,6 @@ paths:
                   type: string
                   example: NLib
                   readOnly: true
-                context:
-                  type: object
               required:
                 - message
                 - classification
@@ -72,10 +86,7 @@ components:
   schemas:
     Classification:
       title: Classification
-      x-stoplight:
-        id: drwn2c9wcv5pp
       type: object
-      x-examples: {}
       properties:
         message:
           type: string
@@ -84,56 +95,6 @@ components:
           type: string
           example: NLib
           readOnly: true
-        context:
-          type: object
       required:
         - message
         - classification
-  requestBodies:
-    ClassificationRequest:
-      content:
-        application/x.classifier.classification+json;version=1:
-          schema:
-            title: Classification
-            x-stoplight:
-              id: drwn2c9wcv5pp
-            type: object
-            x-examples: {}
-            properties:
-              message:
-                type: string
-                example: Greetings from Estonia!
-              classification:
-                type: string
-                example: NLib
-                readOnly: true
-              context:
-                type: object
-            required:
-              - message
-              - classification
-      description: ''
-  responses:
-    ClassificationResponse:
-      description: Example response
-      content:
-        application/x.classifier.classification+json;version=1:
-          schema:
-            title: Classification
-            x-stoplight:
-              id: drwn2c9wcv5pp
-            type: object
-            x-examples: {}
-            properties:
-              message:
-                type: string
-                example: Greetings from Estonia!
-              classification:
-                type: string
-                example: NLib
-                readOnly: true
-              context:
-                type: object
-            required:
-              - message
-              - classification
