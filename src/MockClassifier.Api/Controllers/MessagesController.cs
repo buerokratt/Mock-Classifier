@@ -72,9 +72,9 @@ namespace MockClassifier.Api.Controllers
             _ = headers.TryGetValue(Constants.MessageIdRefHeaderKey, out var messageIdRefHeader);
             var dmrHeaders = new Dictionary<string, string>
             {
-                { Constants.SentByHeaderKey, sentByHeader },
+                { Constants.SentByHeaderKey, sendToHeader },
                 { Constants.MessageIdHeaderKey, messageIdHeader },
-                { Constants.SendToHeaderKey, sendToHeader },
+                { Constants.SendToHeaderKey, sentByHeader },
                 { Constants.MessageIdRefHeaderKey, messageIdRefHeader },
             };
 
