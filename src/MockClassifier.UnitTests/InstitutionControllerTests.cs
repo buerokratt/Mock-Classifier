@@ -3,7 +3,6 @@ using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
-using System;
 using Xunit;
 
 namespace MockClassifier.UnitTests
@@ -14,11 +13,12 @@ namespace MockClassifier.UnitTests
         private readonly Mock<IDmrService> dmrService = new();
         private readonly TokenService tokenService = new();
         private readonly NaturalLanguageService naturalLanguageService = new();
+        private readonly EncodingService encodingService = new();
 
         public InstitutionControllerTests()
         {
             dmrService = new Mock<IDmrService>();
-            sut = new MessagesController(dmrService.Object, tokenService, naturalLanguageService);
+            sut = new MessagesController(dmrService.Object, tokenService, naturalLanguageService, encodingService);
         }
 
         [Theory]
@@ -36,7 +36,7 @@ namespace MockClassifier.UnitTests
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
-            var result = sut.Post(request);
+            var result = sut.Post();
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);
@@ -57,7 +57,7 @@ namespace MockClassifier.UnitTests
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
-            var result = sut.Post(request);
+            var result = sut.Post();
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);

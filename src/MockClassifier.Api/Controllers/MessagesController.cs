@@ -32,15 +32,13 @@ namespace MockClassifier.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post()
         {
-            // Get base64 encoded body
+            // Get base64 encoded body as Payload
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
             var input = await reader.ReadToEndAsync().ConfigureAwait(true);
             if (input == null)
             {
                 return BadRequest(ModelState);
             }
-
-            // Decode base64 to Payload
             var decodedInput = _encodingService.DecodeBase64(input);
             var payload = JsonSerializer.Deserialize<DmrRequestPayload>(decodedInput);
 

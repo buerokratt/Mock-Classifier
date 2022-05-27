@@ -17,11 +17,12 @@ namespace MockClassifier.Api.Services
             if (isBase64)
             {
                 byte[] bytes = Convert.FromBase64String(content);
-                return Encoding.Default.GetString(bytes);
+                var s = Encoding.Default.GetString(bytes);
+                return s;
             }
             else
             {
-                return content;
+                throw new ArgumentException("Argument is not valid Base64");
             }
         }
 
