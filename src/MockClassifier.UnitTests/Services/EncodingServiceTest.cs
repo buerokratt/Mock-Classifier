@@ -32,6 +32,13 @@ namespace MockClassifier.UnitTests.Services
         }
 
         [Fact]
+        public void DecodeBase64ReturnsArgumentException()
+        {
+            _ = Assert.Throws<ArgumentException>(delegate { _ = sut.DecodeBase64("ee8f6ab2-be5b-4712-a684-937a87684c52"); });
+        }
+
+
+        [Fact]
         public void EncodeBase64ReturnsBase64()
         {
             // Act
