@@ -20,7 +20,7 @@ jobs:
 
     - name: Set image tag
       run: |
-        echo "DOCKER_TAG_SHA=ghcr.io/buerokratt/mock-classifier:${GITHUB_SHA}" >> $GITHUB_ENV
+        echo "DOCKER_TAG_SHA=ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA}" >> $GITHUB_ENV
 
     - name: View github_env
       run: echo $GITHUB_ENV
