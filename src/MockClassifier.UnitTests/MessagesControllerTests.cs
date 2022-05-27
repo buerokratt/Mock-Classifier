@@ -27,7 +27,7 @@ namespace MockClassifier.UnitTests
         }
 
         [Theory]
-        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiJtZXNzYWdlMSJ9")]
+        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiJtZXNzYWdlMSJ9")] //{"Classification":"","Message":"message1"}
         public async Task ReturnsAccepted(string payload)
         {
             // Arrange
@@ -47,20 +47,19 @@ namespace MockClassifier.UnitTests
         }
 
         [Theory]
-        [InlineData("<defence>")]
-        public void VerifyDmrRequest(string message)
+        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ==")] //{"Classification":"","Message":"<defence>"}
+        public async Task VerifyDmrRequest(string payload)
         {
             // Arrange
-            var request = new DmrRequestPayload
+            sut.ControllerContext = new ControllerContext()
             {
-                Message = message,
-                Classification = string.Empty
+                HttpContext = GetContext(payload)
             };
 
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
-            var result = sut.Post();
+            var result = await sut.Post().ConfigureAwait(true);
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);
