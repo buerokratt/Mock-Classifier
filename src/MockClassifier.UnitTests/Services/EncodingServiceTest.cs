@@ -29,12 +29,14 @@ namespace MockClassifier.UnitTests.Services
         [Fact]
         public void DecodeBase64ReturnsArgumentNullException()
         {
+            // Act & Assert
             _ = Assert.Throws<ArgumentNullException>(delegate { _ = sut.DecodeBase64(null); });
         }
 
         [Fact]
         public void DecodeBase64ReturnsArgumentException()
         {
+            // Act & Assert
             _ = Assert.Throws<ArgumentException>(delegate { _ = sut.DecodeBase64(invalidBase64String); });
         }
 
@@ -51,6 +53,7 @@ namespace MockClassifier.UnitTests.Services
         [Fact]
         public void EncodeBase64ReturnsArgumentNullException()
         {
+            // Act & Assert
             _ = Assert.Throws<ArgumentNullException>(delegate { _ = sut.EncodeBase64(null); });
         }
     }
