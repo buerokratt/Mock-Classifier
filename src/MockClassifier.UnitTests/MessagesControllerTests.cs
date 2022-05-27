@@ -27,22 +27,13 @@ namespace MockClassifier.UnitTests
         }
 
         [Theory]
-        [InlineData("")]
-        [InlineData("message1")]
-        public async Task ReturnsAccepted(string message)
+        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiJtZXNzYWdlMSJ9")]
+        public async Task ReturnsAccepted(string payload)
         {
-            // Arrange payload
-            var payload = new DmrRequestPayload
-            {
-                Message = message,
-                Classification = string.Empty
-            };
-            var encodedPayload = encodingService.EncodeBase64(JsonSerializer.Serialize(payload));
-
-            // Arrange controller with context
+            // Arrange
             sut.ControllerContext = new ControllerContext()
             {
-                HttpContext = GetContext(encodedPayload)
+                HttpContext = GetContext(payload)
             };
 
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
