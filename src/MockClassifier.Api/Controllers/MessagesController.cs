@@ -2,6 +2,8 @@
 using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Models;
 using MockClassifier.Api.Services.Dmr;
+using System.Text;
+using System.Text.Json;
 
 namespace MockClassifier.Api.Controllers
 {
@@ -12,30 +14,41 @@ namespace MockClassifier.Api.Controllers
         private readonly IDmrService _dmrService;
         private readonly ITokenService _tokenService;
         private readonly INaturalLanguageService _naturalLanguageService;
+        private readonly IEncodingService _encodingService;
 
-        public MessagesController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService)
+        public MessagesController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService, IEncodingService encodingService)
         {
             _dmrService = dmrService;
             _tokenService = tokenService;
             _naturalLanguageService = naturalLanguageService;
+            _encodingService = encodingService;
         }
 
         /// <summary>
         /// Processes a string to identify classifications and issues call backs to Dmr for each classification.
         /// </summary>
-        /// <param name="payload">Property which contains the payload containing the message to be classified</param>
+        /// <param name="input">Property which contains the base64 encoded payload containing the message to be classified</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
-        public IActionResult Post([FromBody] DmrRequestPayload payload)
+        public async Task<IActionResult> Post()
         {
-            if (payload == null)
+            // Get base64 encoded body
+            using StreamReader reader = new(Request.Body, Encoding.UTF8);
+            var input = await reader.ReadToEndAsync().ConfigureAwait(true);
+            if (input == null)
             {
                 return BadRequest(ModelState);
             }
 
+            // Decode base64 to Payload
+            var decodedInput = _encodingService.DecodeBase64(input);
+            var payload = JsonSerializer.Deserialize<DmrRequestPayload>(decodedInput);
+
+            // Classify
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
             classifications = classifications.Concat(_tokenService.Classify(payload.Message).ToList()).ToList();
 
+            // Send Dmr call back(s)
             foreach (var classification in classifications)
             {
                 var dmrRequest = GetDmrRequest(payload.Message, classification, Request.Headers);
