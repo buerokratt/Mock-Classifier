@@ -11,7 +11,7 @@ namespace MockClassifier.UnitTests.Extensions
         {
             _ = handler
                 .Expect("/")
-                .WithContent($"{{\"forwardUri\":\"https://forwarduri.fakeurl.com\",\"payload\":{{\"callbackUri\":\"https://callbackuri.fakeurl.com\",\"ministry\":\"border\",\"messages\":[\"{expectedMessage}\"]}}}}")
+                .WithContent($"{{\"Classification\":\"border\",\"Message\":\"{expectedMessage}\"}}")
                 .Respond(HttpStatusCode.Accepted);
 
             return handler;

@@ -3,6 +3,7 @@ using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MockClassifier.UnitTests
@@ -24,7 +25,7 @@ namespace MockClassifier.UnitTests
         [Theory]
         [InlineData("")]
         [InlineData("message1")]
-        public void ReturnsAccepted(string message)
+        public async Task ReturnsAccepted(string message)
         {
             // Arrange
             var request = new DmrRequestPayload
@@ -36,7 +37,7 @@ namespace MockClassifier.UnitTests
             _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
 
             // Act
-            var result = sut.Post();
+            var result = await sut.Post().ConfigureAwait(true);
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);
