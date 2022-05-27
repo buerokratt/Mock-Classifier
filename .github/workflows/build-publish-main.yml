@@ -20,7 +20,8 @@ jobs:
 
     - name: Set image tag
       run: |
-        echo "DOCKER_TAG_SHA=ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA}" >> $GITHUB_ENV
+        LOWER_CASE_GITHUB_REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')
+        echo "DOCKER_TAG_SHA=ghcr.io/${LOWER_CASE_GITHUB_REPOSITORY}:${GITHUB_SHA}" >> $GITHUB_ENV
 
     - name: View github_env
       run: echo $GITHUB_ENV
