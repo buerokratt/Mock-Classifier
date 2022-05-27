@@ -16,7 +16,7 @@ namespace MockClassifier.UnitTests.Extensions
                 .Returns(() =>
                 {
                     var client = messageHandler.ToHttpClient();
-                    client.BaseAddress = new Uri("https://dmr.fakeurl.com");
+                    client.BaseAddress = new Uri("https://tablelogapi.azurewebsites.net/app/fromclassifier");
 
                     return client;
                 });

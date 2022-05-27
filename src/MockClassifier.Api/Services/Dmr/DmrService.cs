@@ -1,4 +1,5 @@
-﻿using MockClassifier.Api.Models;
+﻿using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
 using System.Collections.Concurrent;
 using System.Net.Mime;
 using System.Text;
@@ -13,10 +14,11 @@ namespace MockClassifier.Api.Services.Dmr
     {
         private readonly HttpClient httpClient;
         private readonly ILogger<DmrService> logger;
+        private readonly IEncodingService _encodingService;
 
         private readonly ConcurrentQueue<DmrRequest> requests;
 
-        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger)
+        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger, IEncodingService encodingService)
         {
             if (httpClientFactory == null)
             {
@@ -32,6 +34,8 @@ namespace MockClassifier.Api.Services.Dmr
             this.logger = logger;
 
             requests = new ConcurrentQueue<DmrRequest>();
+
+            _encodingService = encodingService;
         }
 
         public void RecordRequest(DmrRequest request)
@@ -47,7 +51,8 @@ namespace MockClassifier.Api.Services.Dmr
                 {
                     // Setup content
                     var jsonPayload = JsonSerializer.Serialize(request.Payload);
-                    using var content = new StringContent(jsonPayload, Encoding.UTF8, MediaTypeNames.Application.Json);
+                    var jsonPayloadBase64 = _encodingService.EncodeBase64(jsonPayload);
+                    using var content = new StringContent(jsonPayloadBase64, Encoding.UTF8, MediaTypeNames.Application.Json);
 
                     // Setup message
                     using var requestMessage = new HttpRequestMessage()

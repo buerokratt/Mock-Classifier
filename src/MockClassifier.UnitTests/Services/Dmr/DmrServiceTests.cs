@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
+using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.UnitTests.Extensions;
 using Moq;
@@ -20,6 +23,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
         };
         private readonly MockHttpMessageHandler httpMessageHandler = new();
         private readonly Mock<ILogger<DmrService>> logger = new();
+        private readonly IEncodingService encodingService = new EncodingService();
 
         [Fact]
         public async Task ShouldCallDmrApiWithGivenRequestWhenRequestIsRecorded()
@@ -28,7 +32,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
             sut.RecordRequest(GetDmrRequest());
 
@@ -46,7 +50,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
             sut.RecordRequest(GetDmrRequest("my first message"));
             sut.RecordRequest(GetDmrRequest("my second message"));
@@ -64,7 +68,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var clientFactory = GetHttpClientFactory(dmrHttpClient);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
             sut.RecordRequest(GetDmrRequest());
 
@@ -92,7 +96,14 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
         private static DmrRequest GetDmrRequest(string message = "my test message")
         {
-            var request = new DmrRequest(new Dictionary<string, string>())
+            var headers = new Dictionary<string, string>
+            {
+                { Constants.SentByHeaderKey, "MockClassifier.UnitTests.Services.Dmr.DmrServiceTests" },
+                { Constants.MessageIdHeaderKey, "1f7b356d-a6f4-4aeb-85cd-9d570dbc7606" },
+                { Constants.SendToHeaderKey, "Classifier" },
+                { Constants.MessageIdRefHeaderKey, "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35" },
+            };
+            var request = new DmrRequest(headers)
             {
                 Payload = new DmrRequestPayload
                 {
