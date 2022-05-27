@@ -9,9 +9,18 @@ namespace MockClassifier.Api.Services.Dmr
     public record DmrRequest
     {
         /// <summary>
-        /// The headers  of requests to or from Dmr
+        /// Constructor
         /// </summary>
-        public DmrRequestHeaders Headers { get; set; }
+        /// <param name="headers">The headers that should be added to the headers property.</param>
+        public DmrRequest(Dictionary<string, string> headers)
+        {
+            Headers = headers;
+        }
+
+        /// <summary>
+        /// The headers of requests to or from Dmr
+        /// </summary>
+        public Dictionary<string, string> Headers { get; }
 
         /// <summary>
         /// The payload (request body) of requests to or from Dmr

@@ -56,29 +56,31 @@ namespace MockClassifier.Api.Controllers
         {
             // Setup headers
             _ = headers.TryGetValue(Constants.SentByHeaderKey, out var sentByHeader);
-            _ = headers.TryGetValue(Constants.MessageIdHeaderKey, out var messageidHeader);
+            _ = headers.TryGetValue(Constants.MessageIdHeaderKey, out var messageIdHeader);
             _ = headers.TryGetValue(Constants.SendToHeaderKey, out var sendToHeader);
-            _ = headers.TryGetValue(Constants.MessageIdRefHeaderKey, out var messageidRefHeader);
-            var dmrHeaders = new DmrRequestHeaders()
+            _ = headers.TryGetValue(Constants.MessageIdRefHeaderKey, out var messageIdRefHeader);
+            var dmrHeaders = new Dictionary<string, string>
             {
-                SentBy = sentByHeader,
-                MessageId = messageidHeader,
-                SendTo = sendToHeader,
-                MessageIdRef = messageidRefHeader,
+                { Constants.SentByHeaderKey, sentByHeader },
+                { Constants.MessageIdHeaderKey, messageIdHeader },
+                { Constants.SendToHeaderKey, sendToHeader },
+                { Constants.MessageIdRefHeaderKey, messageIdRefHeader },
             };
 
             // Setup payload
-            var dmrPaylod = new DmrRequestPayload()
+            var dmrPayload = new DmrRequestPayload()
             {
                 Message = message,
                 Classification = classification
             };
 
-            return new DmrRequest
+            // Setup request
+            var dmrRequest = new DmrRequest(dmrHeaders)
             {
-                Headers = dmrHeaders,
-                Payload = dmrPaylod
+                Payload = dmrPayload
             };
+
+            return dmrRequest;
         }
     }
 }

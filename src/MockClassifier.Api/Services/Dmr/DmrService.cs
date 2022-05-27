@@ -55,10 +55,10 @@ namespace MockClassifier.Api.Services.Dmr
                         Method = HttpMethod.Post,
                         Content = content,
                     };
-                    requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers.MessageId);
-                    requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers.MessageIdRef);
-                    requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers.SendTo);
-                    requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers.SentBy);
+                    requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers[Constants.MessageIdHeaderKey]);
+                    requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers[Constants.MessageIdRefHeaderKey]);
+                    requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers[Constants.SendToHeaderKey]);
+                    requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
 
                     // Send request
                     var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(true);
