@@ -1,4 +1,5 @@
 ﻿using MockClassifier.Api.Interfaces;
+using System;
 using System.Text;
 
 namespace MockClassifier.Api.Services
@@ -13,11 +14,10 @@ namespace MockClassifier.Api.Services
             };
 
             Span<byte> buffer = new(new byte[content.Length]);
-            var isBase64 = Convert.TryFromBase64String(content, buffer, out _);
+            var isBase64 = Convert.TryFromBase64String(content, buffer, out int bytesWritten);
             if (isBase64)
             {
-                byte[] bytes = Convert.FromBase64String(content);
-                var s = Encoding.UTF8.GetString(bytes);
+                var s = Encoding.UTF8.GetString(buffer[..bytesWritten]);
                 return s;
             }
             else
