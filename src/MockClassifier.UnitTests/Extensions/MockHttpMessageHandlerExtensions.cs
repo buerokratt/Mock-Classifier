@@ -8,14 +8,15 @@ namespace MockClassifier.UnitTests.Extensions
 {
     internal static class MockHttpMessageHandlerExtensions
     {
-        public static MockHttpMessageHandler SetupWithMessage(
+        public static MockHttpMessageHandler SetupWithExpectedMessage(
             this MockHttpMessageHandler handler,
-            string expectedMessage = "my test message")
+            string expectedMessage = "my test message",
+            string classification = "border")
         {
             var payload = new DmrRequestPayload
             {
                 Message = expectedMessage,
-                Classification = string.Empty,
+                Classification = classification,
             };
             var jsonPayload = JsonSerializer.Serialize(payload);
             var jsonPayloadBase64 = new EncodingService().EncodeBase64(jsonPayload);

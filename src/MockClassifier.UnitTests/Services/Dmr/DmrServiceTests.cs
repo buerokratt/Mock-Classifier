@@ -28,7 +28,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
         [Fact]
         public async Task ShouldCallDmrApiWithGivenRequestWhenRequestIsRecorded()
         {
-            _ = httpMessageHandler.SetupWithMessage();
+            _ = httpMessageHandler.SetupWithExpectedMessage();
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
@@ -36,7 +36,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
@@ -45,17 +45,17 @@ namespace MockClassifier.UnitTests.Services.Dmr
         public async Task ShouldCallDmrApiForEachGivenRequestWhenMultipleRequestsAreRecorded()
         {
             _ = httpMessageHandler
-                .SetupWithMessage("my first message")
-                .SetupWithMessage("my second message");
+                .SetupWithExpectedMessage("my first message", "education")
+                .SetupWithExpectedMessage("my second message", "social");
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
             var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
-            sut.RecordRequest(GetDmrRequest("my first message"));
-            sut.RecordRequest(GetDmrRequest("my second message"));
+            sut.RecordRequest(GetDmrRequest("my first message", "education"));
+            sut.RecordRequest(GetDmrRequest("my second message", "social"));
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
@@ -72,7 +72,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
         }
 
         private static Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler, DmrServiceSettings settings = null)
@@ -94,7 +94,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
         }
 
 
-        private static DmrRequest GetDmrRequest(string message = "my test message")
+        private static DmrRequest GetDmrRequest(string message = "my test message", string classification = "border")
         {
             var headers = new Dictionary<string, string>
             {
@@ -108,7 +108,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
                 Payload = new DmrRequestPayload
                 {
                     Message = message,
-                    Classification = "border"
+                    Classification = classification
                 }
             };
 

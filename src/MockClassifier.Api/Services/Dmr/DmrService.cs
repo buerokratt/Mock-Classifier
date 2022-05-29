@@ -66,7 +66,7 @@ namespace MockClassifier.Api.Services.Dmr
                     requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
 
                     // Send request
-                    var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(true);
+                    var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
                     _ = response.EnsureSuccessStatusCode();
 
 
