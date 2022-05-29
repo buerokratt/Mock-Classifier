@@ -7,8 +7,8 @@ namespace MockClassifier.UnitTests.Services
     public class EncodingServiceTest
     {
         private readonly EncodingService sut;
-        private const string plainText = "burokratt";
-        private const string base64Text = "YnVyb2tyYXR0";
+        private const string plainText = "bürokratt";
+        private const string base64Text = "YsO8cm9rcmF0dA==";
         private const string invalidBase64String = "ee8f6ab2-be5b-4712-a684-937a87684c52";
 
         public EncodingServiceTest()

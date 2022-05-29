@@ -17,7 +17,7 @@ namespace MockClassifier.Api.Services
             if (isBase64)
             {
                 byte[] bytes = Convert.FromBase64String(content);
-                var s = Encoding.Default.GetString(bytes);
+                var s = Encoding.UTF8.GetString(bytes);
                 return s;
             }
             else
@@ -33,7 +33,7 @@ namespace MockClassifier.Api.Services
                 throw new ArgumentNullException(nameof(content));
             };
 
-            byte[] bytes = Encoding.ASCII.GetBytes(content);
+            byte[] bytes = Encoding.UTF8.GetBytes(content);
             var base64 = Convert.ToBase64String(bytes);
             return base64;
         }
