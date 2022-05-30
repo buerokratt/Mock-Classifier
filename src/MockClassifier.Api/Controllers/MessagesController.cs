@@ -34,7 +34,7 @@ namespace MockClassifier.Api.Controllers
         {
             // Get base64 encoded body as Payload
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
-            var input = await reader.ReadToEndAsync().ConfigureAwait(true);
+            var input = await reader.ReadToEndAsync().ConfigureAwait(false);
             if (string.IsNullOrEmpty(input))
             {
                 return BadRequest(ModelState);

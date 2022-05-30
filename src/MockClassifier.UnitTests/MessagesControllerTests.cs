@@ -6,7 +6,6 @@ using MockClassifier.Api.Services.Dmr;
 using Moq;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 

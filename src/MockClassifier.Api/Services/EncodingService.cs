@@ -1,5 +1,4 @@
 ﻿using MockClassifier.Api.Interfaces;
-using System;
 using System.Text;
 
 namespace MockClassifier.Api.Services

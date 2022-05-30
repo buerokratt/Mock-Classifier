@@ -69,11 +69,10 @@ namespace MockClassifier.Api.Services.Dmr
                     var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
                     _ = response.EnsureSuccessStatusCode();
 
-
                     // Not sure how to resolve rule CA1848 so removing logging for now
-                    //logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {string.Join(", ", request.Payload.Messages)}");
+                    //logger.LogInformation($"Callback to DMR. Classification = {request.Payload.Classification}, Message = {request.Payload.Message}");
                 }
-                catch (HttpRequestException)
+                catch (HttpRequestException exception)
                 {
                     // Not sure how to resolve rule CA1848 so removing logging for now
                     //logger.LogError(exception, "Call to DMR Service failed");
