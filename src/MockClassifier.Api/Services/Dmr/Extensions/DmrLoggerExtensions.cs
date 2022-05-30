@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
-
-namespace MockClassifier.Api.Services.Dmr.Extensions
+﻿namespace MockClassifier.Api.Services.Dmr.Extensions
 {
     public static class DmrLoggerExtensions
     {
