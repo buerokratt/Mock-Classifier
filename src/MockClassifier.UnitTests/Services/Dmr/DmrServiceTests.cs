@@ -21,6 +21,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
         {
             DmrApiUri = new Uri("https://dmr.fakeurl.com")
         };
+
         private readonly MockHttpMessageHandler httpMessageHandler = new();
         private readonly Mock<ILogger<DmrService>> logger = new();
         private readonly IEncodingService encodingService = new EncodingService();
@@ -103,6 +104,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
                 { Constants.SendToHeaderKey, "Classifier" },
                 { Constants.MessageIdRefHeaderKey, "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35" },
             };
+
             var request = new DmrRequest(headers)
             {
                 Payload = new DmrRequestPayload
@@ -118,7 +120,6 @@ namespace MockClassifier.UnitTests.Services.Dmr
         public void Dispose()
         {
             httpMessageHandler.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }

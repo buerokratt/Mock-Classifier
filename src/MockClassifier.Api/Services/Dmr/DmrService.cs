@@ -1,5 +1,6 @@
 ﻿using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Models;
+using MockClassifier.Api.Services.Dmr.Extensions;
 using System.Collections.Concurrent;
 using System.Net.Mime;
 using System.Text;
@@ -12,8 +13,8 @@ namespace MockClassifier.Api.Services.Dmr
     /// </summary>
     public class DmrService : IDmrService
     {
-        private readonly HttpClient httpClient;
-        private readonly ILogger<DmrService> logger;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<DmrService> _logger;
         private readonly IEncodingService _encodingService;
 
         private readonly ConcurrentQueue<DmrRequest> requests;
@@ -29,9 +30,9 @@ namespace MockClassifier.Api.Services.Dmr
                 throw new ArgumentNullException(nameof(config));
             }
 
-            httpClient = httpClientFactory.CreateClient(config.ClientName);
-            httpClient.BaseAddress = config.DmrApiUri;
-            this.logger = logger;
+            _httpClient = httpClientFactory.CreateClient(config.ClientName);
+            _httpClient.BaseAddress = config.DmrApiUri;
+            _logger = logger;
 
             requests = new ConcurrentQueue<DmrRequest>();
 
@@ -66,16 +67,17 @@ namespace MockClassifier.Api.Services.Dmr
                     requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
 
                     // Send request
-                    var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
+                    var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
                     _ = response.EnsureSuccessStatusCode();
 
                     // Not sure how to resolve rule CA1848 so removing logging for now
-                    //logger.LogInformation($"Callback to DMR. Classification = {request.Payload.Classification}, Message = {request.Payload.Message}");
+                    //_logger.LogInformation($"Callback to DMR. Classification = {request.Payload.Classification}, Message = {request.Payload.Message}");
+                    _logger.DmrCallback(request.Payload.Classification, request.Payload.Message);
                 }
                 catch (HttpRequestException exception)
                 {
                     // Not sure how to resolve rule CA1848 so removing logging for now
-                    //logger.LogError(exception, "Call to DMR Service failed");
+                    _logger.DmrCallbackFailed(exception);
                 }
             }
         }
