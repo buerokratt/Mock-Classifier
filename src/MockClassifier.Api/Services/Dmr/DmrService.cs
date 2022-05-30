@@ -21,14 +21,8 @@ namespace MockClassifier.Api.Services.Dmr
 
         public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger, IEncodingService encodingService)
         {
-            if (httpClientFactory == null)
-            {
-                throw new ArgumentNullException(nameof(httpClientFactory));
-            }
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
+            _ = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _ = config ?? throw new ArgumentNullException(nameof(config));
 
             _httpClient = httpClientFactory.CreateClient(config.ClientName);
             _httpClient.BaseAddress = config.DmrApiUri;
@@ -56,15 +50,7 @@ namespace MockClassifier.Api.Services.Dmr
                     using var content = new StringContent(jsonPayloadBase64, Encoding.UTF8, MediaTypeNames.Application.Json);
 
                     // Setup message
-                    using var requestMessage = new HttpRequestMessage()
-                    {
-                        Method = HttpMethod.Post,
-                        Content = content,
-                    };
-                    requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers[Constants.MessageIdHeaderKey]);
-                    requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers[Constants.MessageIdRefHeaderKey]);
-                    requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers[Constants.SendToHeaderKey]);
-                    requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
+                    using var requestMessage = CreateRequestMessage(request, content);
 
                     // Send request
                     var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
@@ -77,6 +63,22 @@ namespace MockClassifier.Api.Services.Dmr
                     _logger.DmrCallbackFailed(exception);
                 }
             }
+        }
+
+        private static HttpRequestMessage CreateRequestMessage(DmrRequest request, StringContent content)
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Post,
+                Content = content,
+            };
+
+            requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers[Constants.MessageIdHeaderKey]);
+            requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers[Constants.MessageIdRefHeaderKey]);
+            requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers[Constants.SendToHeaderKey]);
+            requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
+
+            return requestMessage;
         }
     }
 }
