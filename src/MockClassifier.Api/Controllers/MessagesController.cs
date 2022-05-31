@@ -46,7 +46,7 @@ namespace MockClassifier.Api.Controllers
 
             // Classify
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
-classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
+            classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
 
             // Send Dmr call back(s)
             foreach (var classification in classifications)
