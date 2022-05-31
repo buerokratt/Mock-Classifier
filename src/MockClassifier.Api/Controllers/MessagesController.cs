@@ -30,6 +30,8 @@ namespace MockClassifier.Api.Controllers
         /// <param name="input">Property which contains the base64 encoded payload containing the message to be classified</param>
         /// <returns>An empty 202/Accepted result</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post()
         {
             // Get base64 encoded body as Payload
@@ -44,7 +46,7 @@ namespace MockClassifier.Api.Controllers
 
             // Classify
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
-            classifications = classifications.Concat(_tokenService.Classify(payload.Message).ToList()).ToList();
+classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
 
             // Send Dmr call back(s)
             foreach (var classification in classifications)
