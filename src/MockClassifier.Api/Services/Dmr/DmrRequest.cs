@@ -2,47 +2,29 @@
 
 namespace MockClassifier.Api.Services.Dmr
 {
-    /**
-     * NOTE:
-     * These models live here temporarily until they can be referenced via a NuGet package library
-     */
-
     /// <summary>
-    /// The model for the DMR API endpoint
+    /// The model for Dmr requests, including headers and payload/body
     /// </summary>
-    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
+    [ExcludeFromCodeCoverage] // No logic so not appropriate for code coverage
     public record DmrRequest
     {
         /// <summary>
-        /// The destination URI for the <see cref="Payload"/>
+        /// Constructor
         /// </summary>
-        public Uri ForwardUri { get; set; }
+        /// <param name="headers">The headers that should be added to the headers property.</param>
+        public DmrRequest(Dictionary<string, string> headers)
+        {
+            Headers = headers;
+        }
 
         /// <summary>
-        /// The payload being sent to the <see cref="ForwardUri"/>
+        /// The headers of requests to or from Dmr
         /// </summary>
-        public Payload Payload { get; set; }
-    }
-
-    /// <summary>
-    /// The payload that the DMR handles
-    /// </summary>
-    [ExcludeFromCodeCoverage] // Temporarily excluded from code coverage in order to get the CI pipeline merged. This attribute will be removed later.
-    public record Payload
-    {
-        /// <summary>
-        /// The callback URI
-        /// </summary>
-        public Uri CallbackUri { get; set; }
+        public Dictionary<string, string> Headers { get; }
 
         /// <summary>
-        /// The ministry that should handle this payload
+        /// The payload (request body) of requests to or from Dmr
         /// </summary>
-        public string Ministry { get; set; }
-
-        /// <summary>
-        /// One or more messages being sent to the DMR
-        /// </summary>
-        public IEnumerable<string> Messages { get; set; }
+        public DmrRequestPayload Payload { get; set; }
     }
 }

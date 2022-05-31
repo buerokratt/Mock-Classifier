@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
+using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
+using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.UnitTests.Extensions;
 using Moq;
 using RichardSzalay.MockHttp;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,21 +21,23 @@ namespace MockClassifier.UnitTests.Services.Dmr
         {
             DmrApiUri = new Uri("https://dmr.fakeurl.com")
         };
+
         private readonly MockHttpMessageHandler httpMessageHandler = new();
         private readonly Mock<ILogger<DmrService>> logger = new();
+        private readonly IEncodingService encodingService = new EncodingService();
 
         [Fact]
         public async Task ShouldCallDmrApiWithGivenRequestWhenRequestIsRecorded()
         {
-            _ = httpMessageHandler.SetupWithMessage();
+            _ = httpMessageHandler.SetupWithExpectedMessage();
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
@@ -40,17 +46,17 @@ namespace MockClassifier.UnitTests.Services.Dmr
         public async Task ShouldCallDmrApiForEachGivenRequestWhenMultipleRequestsAreRecorded()
         {
             _ = httpMessageHandler
-                .SetupWithMessage("my first message")
-                .SetupWithMessage("my second message");
+                .SetupWithExpectedMessage("my first message", "education")
+                .SetupWithExpectedMessage("my second message", "social");
 
             var clientFactory = GetHttpClientFactory(httpMessageHandler);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
-            sut.RecordRequest(GetDmrRequest("my first message"));
-            sut.RecordRequest(GetDmrRequest("my second message"));
+            sut.RecordRequest(GetDmrRequest("my first message", "education"));
+            sut.RecordRequest(GetDmrRequest("my second message", "social"));
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
             httpMessageHandler.VerifyNoOutstandingExpectation();
         }
@@ -63,11 +69,11 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var clientFactory = GetHttpClientFactory(dmrHttpClient);
 
-            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object);
+            var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
             sut.RecordRequest(GetDmrRequest());
 
-            await sut.ProcessRequestsAsync().ConfigureAwait(true);
+            await sut.ProcessRequestsAsync().ConfigureAwait(false);
         }
 
         private static Mock<IHttpClientFactory> GetHttpClientFactory(MockHttpMessageHandler messageHandler, DmrServiceSettings settings = null)
@@ -89,24 +95,32 @@ namespace MockClassifier.UnitTests.Services.Dmr
         }
 
 
-        private static DmrRequest GetDmrRequest(string message = "my test message")
+        private static DmrRequest GetDmrRequest(string message = "my test message", string classification = "border")
         {
-            return new DmrRequest
+            var headers = new Dictionary<string, string>
             {
-                ForwardUri = new Uri("https://forwarduri.fakeurl.com"),
-                Payload = new Payload
+                { Constants.SentByHeaderKey, "MockClassifier.UnitTests.Services.Dmr.DmrServiceTests" },
+                { Constants.MessageIdHeaderKey, "1f7b356d-a6f4-4aeb-85cd-9d570dbc7606" },
+                { Constants.SendToHeaderKey, "Classifier" },
+                { Constants.MessageIdRefHeaderKey, "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35" },
+                { Constants.ModelTypeHeaderKey, "MyModelType" }
+            };
+
+            var request = new DmrRequest(headers)
+            {
+                Payload = new DmrRequestPayload
                 {
-                    CallbackUri = new Uri("https://callbackuri.fakeurl.com"),
-                    Messages = new[] { message },
-                    Ministry = "border"
+                    Message = message,
+                    Classification = classification
                 }
             };
+
+            return request;
         }
 
         public void Dispose()
         {
             httpMessageHandler.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }

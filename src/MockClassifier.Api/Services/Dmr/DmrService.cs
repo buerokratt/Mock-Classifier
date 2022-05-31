@@ -1,4 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
+using MockClassifier.Api.Services.Dmr.Extensions;
+using System.Collections.Concurrent;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
 
 namespace MockClassifier.Api.Services.Dmr
 {
@@ -7,26 +13,24 @@ namespace MockClassifier.Api.Services.Dmr
     /// </summary>
     public class DmrService : IDmrService
     {
-        private readonly HttpClient httpClient;
-        private readonly ILogger<DmrService> logger;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<DmrService> _logger;
+        private readonly IEncodingService _encodingService;
 
         private readonly ConcurrentQueue<DmrRequest> requests;
 
-        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger)
+        public DmrService(IHttpClientFactory httpClientFactory, DmrServiceSettings config, ILogger<DmrService> logger, IEncodingService encodingService)
         {
-            if (httpClientFactory == null)
-            {
-                throw new ArgumentNullException(nameof(httpClientFactory));
-            }
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
+            _ = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _ = config ?? throw new ArgumentNullException(nameof(config));
 
-            httpClient = httpClientFactory.CreateClient(config.ClientName);
-            this.logger = logger;
+            _httpClient = httpClientFactory.CreateClient(config.ClientName);
+            _httpClient.BaseAddress = config.DmrApiUri;
+            _logger = logger;
 
             requests = new ConcurrentQueue<DmrRequest>();
+
+            _encodingService = encodingService;
         }
 
         public void RecordRequest(DmrRequest request)
@@ -40,19 +44,42 @@ namespace MockClassifier.Api.Services.Dmr
             {
                 try
                 {
-                    var response = await httpClient.PostAsJsonAsync("/", request).ConfigureAwait(true);
+                    // Setup content
+                    var jsonPayload = JsonSerializer.Serialize(request.Payload);
+                    var jsonPayloadBase64 = _encodingService.EncodeBase64(jsonPayload);
+                    using var content = new StringContent(jsonPayloadBase64, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+                    // Setup message
+                    using var requestMessage = CreateRequestMessage(request, content);
+
+                    // Send request
+                    var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
                     _ = response.EnsureSuccessStatusCode();
 
-
-                    // Not sure how to resolve rule CA1848 so removing logging for now
-                    //logger.LogInformation($"Callback to DMR. Ministry = {request.Payload.Ministry}, Messages = {string.Join(", ", request.Payload.Messages)}");
+                    _logger.DmrCallback(request.Payload.Classification, request.Payload.Message);
                 }
-                catch (HttpRequestException)
+                catch (HttpRequestException exception)
                 {
-                    // Not sure how to resolve rule CA1848 so removing logging for now
-                    //logger.LogError(exception, "Call to DMR Service failed");
+                    _logger.DmrCallbackFailed(exception);
                 }
             }
+        }
+
+        private static HttpRequestMessage CreateRequestMessage(DmrRequest request, StringContent content)
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Post,
+                Content = content,
+            };
+
+            requestMessage.Headers.Add(Constants.MessageIdHeaderKey, request.Headers[Constants.MessageIdHeaderKey]);
+            requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers[Constants.MessageIdRefHeaderKey]);
+            requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers[Constants.SendToHeaderKey]);
+            requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
+            requestMessage.Headers.Add(Constants.ModelTypeHeaderKey, request.Headers[Constants.ModelTypeHeaderKey]);
+
+            return requestMessage;
         }
     }
 }
