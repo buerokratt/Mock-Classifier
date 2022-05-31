@@ -77,6 +77,7 @@ namespace MockClassifier.Api.Services.Dmr
             requestMessage.Headers.Add(Constants.MessageIdRefHeaderKey, request.Headers[Constants.MessageIdRefHeaderKey]);
             requestMessage.Headers.Add(Constants.SendToHeaderKey, request.Headers[Constants.SendToHeaderKey]);
             requestMessage.Headers.Add(Constants.SentByHeaderKey, request.Headers[Constants.SentByHeaderKey]);
+            requestMessage.Headers.Add(Constants.ModelTypeHeaderKey, request.Headers[Constants.ModelTypeHeaderKey]);
 
             return requestMessage;
         }

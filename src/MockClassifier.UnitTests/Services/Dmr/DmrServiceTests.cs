@@ -103,6 +103,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
                 { Constants.MessageIdHeaderKey, "1f7b356d-a6f4-4aeb-85cd-9d570dbc7606" },
                 { Constants.SendToHeaderKey, "Classifier" },
                 { Constants.MessageIdRefHeaderKey, "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35" },
+                { Constants.ModelTypeHeaderKey, "MyModelType" }
             };
 
             var request = new DmrRequest(headers)

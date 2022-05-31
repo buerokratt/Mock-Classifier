@@ -25,11 +25,11 @@ namespace MockClassifier.UnitTests
             sut = new MessagesController(dmrService.Object, tokenService, naturalLanguageService, encodingService);
         }
 
-        [Theory]
-        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiJtZXNzYWdlMSJ9")] //{"Classification":"","Message":"message1"}
-        public async Task ReturnsAccepted(string payload)
+        [Fact]
+        public async Task ReturnsAccepted()
         {
             // Arrange
+            var payload = "eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiJtZXNzYWdlMSJ9"; //{"Classification":"","Message":"message1"}
             sut.ControllerContext = new ControllerContext()
             {
                 HttpContext = GetContext(payload)
@@ -45,11 +45,11 @@ namespace MockClassifier.UnitTests
             dmrService.VerifyNoOtherCalls();
         }
 
-        [Theory]
-        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ==")] //{"Classification":"","Message":"<defence>"}
-        public async Task VerifyDmrRequest(string payload)
+        [Fact]
+        public async Task VerifyDmrRequest()
         {
             // Arrange
+            var payload = "eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ=="; //{"Classification":"","Message":"<defence>"}
             sut.ControllerContext = new ControllerContext()
             {
                 HttpContext = GetContext(payload)
@@ -62,7 +62,36 @@ namespace MockClassifier.UnitTests
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);
-            dmrService.Verify(x => x.RecordRequest(It.IsAny<DmrRequest>()), Times.Once());
+            dmrService
+                .Verify(
+                    x => x.RecordRequest(
+                        It.Is<DmrRequest>(d => d.Payload.Message == "<defence>")),
+                    Times.Once());
+            dmrService.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ==", 1)] //{"Classification":"","Message":"<defence>"}
+        [InlineData("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT48ZWR1Y2F0aW9uPiJ9", 2)] //{"Classification":"","Message":"<defence><education>"}
+        public async Task VerifyMultipleCallsToDmrServiceWhenThereAreMultipleClassifications(string payload, int expectedDmrServiceCalls)
+        {
+            sut.ControllerContext = new ControllerContext()
+            {
+                HttpContext = GetContext(payload)
+            };
+
+            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+
+            // Act
+            var result = await sut.Post().ConfigureAwait(true);
+
+            // Assert
+            _ = Assert.IsType<AcceptedResult>(result);
+            dmrService
+                .Verify(
+                    x => x.RecordRequest(It.IsAny<DmrRequest>()),
+                    Times.Exactly(expectedDmrServiceCalls));
+            dmrService.VerifyNoOtherCalls();
         }
 
         private static DefaultHttpContext GetContext(string payload)

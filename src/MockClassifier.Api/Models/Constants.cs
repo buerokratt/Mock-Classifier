@@ -6,5 +6,6 @@
         public const string MessageIdRefHeaderKey = "X-Message-Id-Ref";
         public const string SendToHeaderKey = "X-Sent-By";
         public const string SentByHeaderKey = "X-Send-To";
+        public const string ModelTypeHeaderKey = "X-Model-Type";
     }
 }
