@@ -1,8 +1,11 @@
-﻿namespace MockClassifier.Api.Services.Dmr
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MockClassifier.Api.Services.Dmr
 {
     /// <summary>
     /// A settings object for <see cref="DmrService"/>
     /// </summary>
+    [ExcludeFromCodeCoverage] // No logic so not appropriate for code coverage
     public class DmrServiceSettings
     {
         private const string DefaultHttpClientName = "DmrApi";
