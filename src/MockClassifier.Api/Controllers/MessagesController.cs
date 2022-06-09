@@ -48,6 +48,7 @@ namespace MockClassifier.Api.Controllers
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
             classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
 
+            Console.WriteLine(payload.Message);
             // Send Dmr call back(s)
             foreach (var classification in classifications)
             {
@@ -71,14 +72,13 @@ namespace MockClassifier.Api.Controllers
             _ = headers.TryGetValue(Constants.SentByHeaderKey, out var sentByHeader);
             _ = headers.TryGetValue(Constants.MessageIdHeaderKey, out var messageIdHeader);
             _ = headers.TryGetValue(Constants.SendToHeaderKey, out var sendToHeader);
-            _ = headers.TryGetValue(Constants.MessageIdRefHeaderKey, out var messageIdRefHeader);
             _ = headers.TryGetValue(Constants.ModelTypeHeaderKey, out var modelTypeHeader);
             var dmrHeaders = new Dictionary<string, string>
             {
                 { Constants.SentByHeaderKey, sendToHeader },
-                { Constants.MessageIdHeaderKey, messageIdHeader },
+                { Constants.MessageIdHeaderKey, Guid.NewGuid().ToString() },
                 { Constants.SendToHeaderKey, sentByHeader },
-                { Constants.MessageIdRefHeaderKey, messageIdRefHeader },
+                { Constants.MessageIdRefHeaderKey, messageIdHeader },
                 { Constants.ModelTypeHeaderKey, modelTypeHeader}
             };
 

@@ -94,12 +94,35 @@ namespace MockClassifier.UnitTests
             dmrService.VerifyNoOtherCalls();
         }
 
-        private static DefaultHttpContext GetContext(string payload)
+        [Fact]
+        public async Task VerifyCorrectMessageIdHeadersAreSetOnDmrRequest()
+        {
+            sut.ControllerContext = new ControllerContext()
+            {
+                HttpContext = GetContext("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ==", "sourceMessageId")
+            };
+
+            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+
+            // Act
+            var result = await sut.Post().ConfigureAwait(true);
+
+            // Assert
+            _ = Assert.IsType<AcceptedResult>(result);
+            dmrService
+                .Verify(
+                    x => x.RecordRequest(It.Is<DmrRequest>(r => r.Headers["X-Message-Id-Ref"] == "sourceMessageId" && r.Headers["X-Message-Id"] != "sourceMessageId")),
+                    Times.Once);
+            dmrService.VerifyNoOtherCalls();
+        }
+
+        private static DefaultHttpContext GetContext(string payload, string messageId = null)
         {
             var httpContext = new DefaultHttpContext();
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
             httpContext.Request.Body = stream;
             httpContext.Request.ContentLength = stream.Length;
+            httpContext.Request.Headers["X-Message-Id"] = messageId ?? string.Empty;
             return httpContext;
         }
     }
