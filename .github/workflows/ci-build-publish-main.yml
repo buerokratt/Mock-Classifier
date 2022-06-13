@@ -46,6 +46,8 @@ jobs:
         COSIGN_EXPERIMENTAL: "true"
   
   app_deployment:
+    permissions:
+      id-token: write
     env:
       cd_workflow_dispatch_file_name: app-deployment.yml
       app_name: mock-classifier
