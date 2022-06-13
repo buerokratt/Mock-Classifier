@@ -60,6 +60,8 @@ jobs:
       - name: Trigger k8s app deployment
         run: |
           gh workflow run $cd_workflow_dispatch_file_name -f app_name=$app_name -f image_tag=${GITHUB_SHA} --repo buerokratt/Infrastructure --ref issues/8/replicate-k8s-cicd
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   
