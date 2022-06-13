@@ -2,7 +2,7 @@ name: Mock Classifier Build and Publish Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, issues/8/replicate-k8s-cicd ]
 
 jobs:
   PackageDeploy:
@@ -44,3 +44,23 @@ jobs:
           $DOCKER_TAG_SHA
       env:
         COSIGN_EXPERIMENTAL: "true"
+  
+  app_deployment:
+    env:
+      cd_workflow_dispatch_file_name: app-deployment.yml
+      app_name: mock-classifier
+    runs-on:
+      ubuntu-latest
+    defaults:
+      run:
+        shell : bash
+    needs :
+      PackageDeploy
+    steps:
+      - name: Trigger k8s app deployment
+        run: |
+          gh workflow run $cd_workflow_dispatch_file_name -f app_name=$app_name -f image_tag=${GITHUB_SHA} --repo buerokratt/Infrastructure --ref issues/8/replicate-k8s-cicd
+
+
+  
+
