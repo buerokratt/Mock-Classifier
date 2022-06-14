@@ -48,6 +48,7 @@ jobs:
   app_deployment:
     env:
       cd_workflow_dispatch_file_name: app-deployment.yml
+      infrastructure_repo_path: buerokratt/Infrastructure
       app_name: mock-classifier
     runs-on:
       ubuntu-latest
@@ -57,12 +58,11 @@ jobs:
     needs :
       PackageDeploy
     steps:
-      - name: Trigger k8s app deployment
+      - name: Initiate k8s app deployment
         run: |
-          gh workflow run $cd_workflow_dispatch_file_name -f app_name=$app_name -f image_tag=${GITHUB_SHA} --repo buerokratt/Infrastructure --ref issues/8/replicate-k8s-cicd
+          gh workflow run $cd_workflow_dispatch_file_name -f app_name=$app_name -f image_tag=${GITHUB_SHA} --repo $infrastructure_repo_path --ref issues/8/replicate-k8s-cicd
         env:
           GITHUB_TOKEN: ${{ secrets.MULTI_REPO_WORKFLOW_ACCESS_TOKEN }}
-
 
   
 
