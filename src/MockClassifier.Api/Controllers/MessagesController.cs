@@ -48,8 +48,6 @@ namespace MockClassifier.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            Console.WriteLine(input);
-
             var decodedInput = _encodingService.DecodeBase64(input);
             var payload = JsonSerializer.Deserialize<DmrRequestPayload>(decodedInput);
 
