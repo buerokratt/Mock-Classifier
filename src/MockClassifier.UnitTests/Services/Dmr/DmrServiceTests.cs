@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using MockClassifier.Api.Interfaces;
-using MockClassifier.Api.Models;
-using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.UnitTests.Extensions;
 using Moq;
@@ -9,7 +6,6 @@ using RequestProcessor.Models;
 using RequestProcessor.Services.Encoder;
 using RichardSzalay.MockHttp;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
