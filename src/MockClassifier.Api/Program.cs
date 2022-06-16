@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MockBot.Api.Services.Dmr.Extensions;
 using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Services;
-using MockClassifier.Api.Services.Dmr;
-using MockClassifier.Api.Services.Dmr.Extensions;
+using RequestProcessor.Dmr;
 using RequestProcessor.Services.Encoder;
 using System.Diagnostics.CodeAnalysis;
 

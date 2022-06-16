@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Services;
-using MockClassifier.Api.Services.Dmr;
 using Moq;
 using RequestProcessor.AsyncProcessor;
+using RequestProcessor.Dmr;
 using RequestProcessor.Services.Encoder;
 using System.IO;
 using System.Text;

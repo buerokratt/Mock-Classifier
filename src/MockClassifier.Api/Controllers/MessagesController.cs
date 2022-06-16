@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
-using MockClassifier.Api.Services.Dmr;
 using RequestProcessor.AsyncProcessor;
+using RequestProcessor.Dmr;
 using RequestProcessor.Models;
 using RequestProcessor.Services.Encoder;
 using System.Text;
