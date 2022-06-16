@@ -4,6 +4,8 @@ using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using Moq;
+using RequestProcessor.AsyncProcessor;
+using RequestProcessor.Services.Encoder;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +16,14 @@ namespace MockClassifier.UnitTests
     public class MessagesControllerTests
     {
         private readonly MessagesController sut;
-        private readonly Mock<IDmrService> dmrService = new();
+        private readonly Mock<IAsyncProcessorService<DmrRequest>> dmrService = new();
         private readonly TokenService tokenService = new();
         private readonly NaturalLanguageService naturalLanguageService = new();
         private readonly EncodingService encodingService = new();
 
         public MessagesControllerTests()
         {
-            dmrService = new Mock<IDmrService>();
+            dmrService = new Mock<IAsyncProcessorService<DmrRequest>>();
             sut = new MessagesController(dmrService.Object, tokenService, naturalLanguageService, encodingService);
         }
 
@@ -35,7 +37,7 @@ namespace MockClassifier.UnitTests
                 HttpContext = GetContext(payload)
             };
 
-            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.Enqueue(It.IsAny<DmrRequest>()));
 
             // Act
             var result = await sut.Post().ConfigureAwait(true);
@@ -55,7 +57,7 @@ namespace MockClassifier.UnitTests
                 HttpContext = GetContext(payload)
             };
 
-            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.Enqueue(It.IsAny<DmrRequest>()));
 
             // Act
             var result = await sut.Post().ConfigureAwait(true);
@@ -64,7 +66,7 @@ namespace MockClassifier.UnitTests
             _ = Assert.IsType<AcceptedResult>(result);
             dmrService
                 .Verify(
-                    x => x.RecordRequest(
+                    x => x.Enqueue(
                         It.Is<DmrRequest>(d => d.Payload.Message == "<defence>")),
                     Times.Once());
             dmrService.VerifyNoOtherCalls();
@@ -80,7 +82,7 @@ namespace MockClassifier.UnitTests
                 HttpContext = GetContext(payload)
             };
 
-            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.Enqueue(It.IsAny<DmrRequest>()));
 
             // Act
             var result = await sut.Post().ConfigureAwait(true);
@@ -89,7 +91,7 @@ namespace MockClassifier.UnitTests
             _ = Assert.IsType<AcceptedResult>(result);
             dmrService
                 .Verify(
-                    x => x.RecordRequest(It.IsAny<DmrRequest>()),
+                    x => x.Enqueue(It.IsAny<DmrRequest>()),
                     Times.Exactly(expectedDmrServiceCalls));
             dmrService.VerifyNoOtherCalls();
         }
@@ -102,7 +104,7 @@ namespace MockClassifier.UnitTests
                 HttpContext = GetContext("eyJDbGFzc2lmaWNhdGlvbiI6IiIsIk1lc3NhZ2UiOiI8ZGVmZW5jZT4ifQ==", "sourceMessageId")
             };
 
-            _ = dmrService.Setup(m => m.RecordRequest(It.IsAny<DmrRequest>()));
+            _ = dmrService.Setup(m => m.Enqueue(It.IsAny<DmrRequest>()));
 
             // Act
             var result = await sut.Post().ConfigureAwait(true);
@@ -111,7 +113,7 @@ namespace MockClassifier.UnitTests
             _ = Assert.IsType<AcceptedResult>(result);
             dmrService
                 .Verify(
-                    x => x.RecordRequest(It.Is<DmrRequest>(r => r.Headers["X-Message-Id-Ref"] == "sourceMessageId" && r.Headers["X-Message-Id"] != "sourceMessageId")),
+                    x => x.Enqueue(It.Is<DmrRequest>(r => r.Headers.XMessageIdRef == "sourceMessageId" && r.Headers.XMessageId != "sourceMessageId")),
                     Times.Once);
             dmrService.VerifyNoOtherCalls();
         }

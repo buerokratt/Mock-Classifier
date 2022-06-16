@@ -3,6 +3,7 @@ using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.Api.Services.Dmr.Extensions;
+using RequestProcessor.Services.Encoder;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MockClassifier.Api

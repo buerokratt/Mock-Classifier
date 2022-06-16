@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using RequestProcessor.AsyncProcessor;
 
 namespace MockClassifier.Api.Services.Dmr.Extensions
 {
@@ -26,8 +27,9 @@ namespace MockClassifier.Api.Services.Dmr.Extensions
             });
 
             services.TryAddSingleton(settings);
-            services.TryAddSingleton<IDmrService, DmrService>();
-            _ = services.AddHostedService<DmrHostedService>();
+            services.TryAddSingleton(settings as AsyncProcessorSettings);
+            services.TryAddSingleton<IAsyncProcessorService<DmrRequest>, DmrService>();
+            _ = services.AddHostedService<AsyncProcessorHostedService<DmrRequest>>();
         }
     }
 }

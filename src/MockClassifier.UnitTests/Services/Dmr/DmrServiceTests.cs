@@ -5,6 +5,8 @@ using MockClassifier.Api.Services;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.UnitTests.Extensions;
 using Moq;
+using RequestProcessor.Models;
+using RequestProcessor.Services.Encoder;
 using RichardSzalay.MockHttp;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
-            sut.RecordRequest(GetDmrRequest());
+            sut.Enqueue(GetDmrRequest());
 
             await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
@@ -53,8 +55,8 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
-            sut.RecordRequest(GetDmrRequest("my first message", "education"));
-            sut.RecordRequest(GetDmrRequest("my second message", "social"));
+            sut.Enqueue(GetDmrRequest("my first message", "education"));
+            sut.Enqueue(GetDmrRequest("my second message", "social"));
 
             await sut.ProcessRequestsAsync().ConfigureAwait(false);
 
@@ -71,7 +73,7 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
             var sut = new DmrService(clientFactory.Object, DefaultServiceConfig, logger.Object, encodingService);
 
-            sut.RecordRequest(GetDmrRequest());
+            sut.Enqueue(GetDmrRequest());
 
             await sut.ProcessRequestsAsync().ConfigureAwait(false);
         }
@@ -97,16 +99,17 @@ namespace MockClassifier.UnitTests.Services.Dmr
 
         private static DmrRequest GetDmrRequest(string message = "my test message", string classification = "border")
         {
-            var headers = new Dictionary<string, string>
+            // Setup headers
+            var dmrHeaders = new HeadersInput
             {
-                { Constants.SentByHeaderKey, "MockClassifier.UnitTests.Services.Dmr.DmrServiceTests" },
-                { Constants.MessageIdHeaderKey, "1f7b356d-a6f4-4aeb-85cd-9d570dbc7606" },
-                { Constants.SendToHeaderKey, "Classifier" },
-                { Constants.MessageIdRefHeaderKey, "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35" },
-                { Constants.ModelTypeHeaderKey, "MyModelType" }
+                XSentBy = "MockClassifier.UnitTests.Services.Dmr.DmrServiceTests",
+                XMessageId = "1f7b356d-a6f4-4aeb-85cd-9d570dbc7606",
+                XSendTo = "Classifier",
+                XMessageIdRef = "5822c6ef-177d-4dd7-b4c5-0d9d8c8d2c35",
+                XModelType = "MyModelType",
             };
 
-            var request = new DmrRequest(headers)
+            var request = new DmrRequest(dmrHeaders)
             {
                 Payload = new DmrRequestPayload
                 {

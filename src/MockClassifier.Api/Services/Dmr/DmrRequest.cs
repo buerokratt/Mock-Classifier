@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using RequestProcessor.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MockClassifier.Api.Services.Dmr
 {
@@ -12,7 +13,7 @@ namespace MockClassifier.Api.Services.Dmr
         /// Constructor
         /// </summary>
         /// <param name="headers">The headers that should be added to the headers property.</param>
-        public DmrRequest(Dictionary<string, string> headers)
+        public DmrRequest(HeadersInput headers)
         {
             Headers = headers;
         }
@@ -20,7 +21,7 @@ namespace MockClassifier.Api.Services.Dmr
         /// <summary>
         /// The headers of requests to or from Dmr
         /// </summary>
-        public Dictionary<string, string> Headers { get; }
+        public HeadersInput Headers { get; }
 
         /// <summary>
         /// The payload (request body) of requests to or from Dmr

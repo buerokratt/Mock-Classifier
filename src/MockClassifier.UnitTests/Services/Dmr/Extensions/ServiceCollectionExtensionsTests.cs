@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using MockClassifier.Api.Services.Dmr;
 using MockClassifier.Api.Services.Dmr.Extensions;
+using RequestProcessor.AsyncProcessor;
 using System;
 using System.Linq;
 using Xunit;
@@ -23,7 +24,7 @@ namespace MockClassifier.UnitTests.Services.Dmr.Extensions
 
             // Act
             collection.AddDmrService(DefaultServiceConfig);
-            var dmrService = collection.FirstOrDefault(e => e.ServiceType == typeof(IDmrService));
+            var dmrService = collection.FirstOrDefault(e => e.ServiceType == typeof(IAsyncProcessorService<DmrRequest>));
             var dmrServiceSettings = collection.FirstOrDefault(e => e.ServiceType == typeof(DmrServiceSettings));
             var dmrHostedService = collection.FirstOrDefault(e => e.ServiceType == typeof(IHostedService));
 
