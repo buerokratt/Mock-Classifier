@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
-using MockClassifier.Api.Models;
-using MockClassifier.Api.Services.Dmr;
+using RequestProcessor.AsyncProcessor;
+using RequestProcessor.Dmr;
+using RequestProcessor.Models;
+using RequestProcessor.Services.Encoder;
 using System.Text;
 using System.Text.Json;
 
@@ -11,12 +13,16 @@ namespace MockClassifier.Api.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly IDmrService _dmrService;
+        private readonly IAsyncProcessorService<DmrRequest> _dmrService;
         private readonly ITokenService _tokenService;
         private readonly INaturalLanguageService _naturalLanguageService;
         private readonly IEncodingService _encodingService;
 
-        public MessagesController(IDmrService dmrService, ITokenService tokenService, INaturalLanguageService naturalLanguageService, IEncodingService encodingService)
+        public MessagesController(
+            IAsyncProcessorService<DmrRequest> dmrService,
+            ITokenService tokenService,
+            INaturalLanguageService naturalLanguageService,
+            IEncodingService encodingService)
         {
             _dmrService = dmrService;
             _tokenService = tokenService;
@@ -41,6 +47,7 @@ namespace MockClassifier.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var decodedInput = _encodingService.DecodeBase64(input);
             var payload = JsonSerializer.Deserialize<DmrRequestPayload>(decodedInput);
 
@@ -48,12 +55,11 @@ namespace MockClassifier.Api.Controllers
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
             classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
 
-            Console.WriteLine(payload.Message);
             // Send Dmr call back(s)
             foreach (var classification in classifications)
             {
                 var dmrRequest = GetDmrRequest(payload.Message, classification, Request.Headers);
-                _dmrService.RecordRequest(dmrRequest);
+                _dmrService.Enqueue(dmrRequest);
             }
 
             return Accepted();
@@ -69,24 +75,25 @@ namespace MockClassifier.Api.Controllers
         private static DmrRequest GetDmrRequest(string message, string classification, IHeaderDictionary headers)
         {
             // Setup headers
-            _ = headers.TryGetValue(Constants.SentByHeaderKey, out var sentByHeader);
-            _ = headers.TryGetValue(Constants.MessageIdHeaderKey, out var messageIdHeader);
-            _ = headers.TryGetValue(Constants.SendToHeaderKey, out var sendToHeader);
-            _ = headers.TryGetValue(Constants.ModelTypeHeaderKey, out var modelTypeHeader);
-            var dmrHeaders = new Dictionary<string, string>
-            {
-                { Constants.SentByHeaderKey, sendToHeader },
-                { Constants.MessageIdHeaderKey, Guid.NewGuid().ToString() },
-                { Constants.SendToHeaderKey, sentByHeader },
-                { Constants.MessageIdRefHeaderKey, messageIdHeader },
-                { Constants.ModelTypeHeaderKey, modelTypeHeader}
-            };
+            _ = headers.TryGetValue(Constants.XSentByHeaderName, out var sentByHeader);
+            _ = headers.TryGetValue(Constants.XMessageIdHeaderName, out var messageIdHeader);
+            _ = headers.TryGetValue(Constants.XSendToHeaderName, out var sendToHeader);
+            _ = headers.TryGetValue(Constants.XModelTypeHeaderName, out var modelTypeHeader);
 
             // Setup payload
             var dmrPayload = new DmrRequestPayload()
             {
                 Message = message,
                 Classification = classification
+            };
+
+            var dmrHeaders = new HeadersInput
+            {
+                XSentBy = sendToHeader,
+                XMessageId = Guid.NewGuid().ToString(),
+                XSendTo = sentByHeader,
+                XMessageIdRef = messageIdHeader,
+                XModelType = modelTypeHeader
             };
 
             // Setup request
