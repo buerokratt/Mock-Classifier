@@ -3,6 +3,11 @@ name: Mock Classifier CI Pipeline
 on:
   pull_request:
     branches: [ main ]
+    
+env:
+  Bot1Url: "http://localhost:9012"
+  CentOpsUrl: "http://localhost:9014"
+  CentOpsApiKey: "testingadmin"
 
 jobs:
   BuildUnitTest:
