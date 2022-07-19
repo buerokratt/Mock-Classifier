@@ -1,9 +1,10 @@
+using Buerokratt.Common.CentOps;
+using Buerokratt.Common.Dmr;
+using Buerokratt.Common.Dmr.Extensions;
+using Buerokratt.Common.Encoder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using MockBot.Api.Services.Dmr.Extensions;
 using MockClassifier.Api.Interfaces;
 using MockClassifier.Api.Services;
-using RequestProcessor.Dmr;
-using RequestProcessor.Services.Encoder;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MockClassifier.Api
@@ -21,7 +22,9 @@ namespace MockClassifier.Api
 
             // Add services to the container.
             var dmrSettings = configuration.GetSection("DmrServiceSettings").Get<DmrServiceSettings>();
-            services.AddDmrService(dmrSettings);
+            var centOpsSettings = configuration.GetSection("DmrServiceSettings").Get<CentOpsServiceSettings>();
+
+            services.AddDmrService(dmrSettings, centOpsSettings);
             services.TryAddSingleton<ITokenService, TokenService>();
             services.TryAddSingleton<INaturalLanguageService, NaturalLanguageService>();
             services.TryAddSingleton<IEncodingService, EncodingService>();

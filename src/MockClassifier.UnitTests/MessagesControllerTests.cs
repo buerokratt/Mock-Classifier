@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Buerokratt.Common.AsyncProcessor;
+using Buerokratt.Common.Dmr;
+using Buerokratt.Common.Encoder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Controllers;
 using MockClassifier.Api.Services;
 using Moq;
-using RequestProcessor.AsyncProcessor;
-using RequestProcessor.Dmr;
-using RequestProcessor.Services.Encoder;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
