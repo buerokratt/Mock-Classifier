@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Buerokratt.Common.AsyncProcessor;
+using Buerokratt.Common.Dmr;
+using Buerokratt.Common.Encoder;
+using Buerokratt.Common.Models;
+using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
-using RequestProcessor.AsyncProcessor;
-using RequestProcessor.Dmr;
-using RequestProcessor.Models;
-using RequestProcessor.Services.Encoder;
 using System.Text;
 using System.Text.Json;
 

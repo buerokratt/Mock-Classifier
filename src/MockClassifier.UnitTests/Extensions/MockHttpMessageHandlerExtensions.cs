@@ -1,5 +1,5 @@
-﻿using RequestProcessor.Dmr;
-using RequestProcessor.Services.Encoder;
+﻿using Buerokratt.Common.Dmr;
+using Buerokratt.Common.Encoder;
 using RichardSzalay.MockHttp;
 using System.Net;
 using System.Text.Json;
