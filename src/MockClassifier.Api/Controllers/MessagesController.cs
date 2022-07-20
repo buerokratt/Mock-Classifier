@@ -75,10 +75,10 @@ namespace MockClassifier.Api.Controllers
         private static DmrRequest GetDmrRequest(string message, string classification, IHeaderDictionary headers)
         {
             // Setup headers
-            _ = headers.TryGetValue(Constants.XSentByHeaderName, out var sentByHeader);
-            _ = headers.TryGetValue(Constants.XMessageIdHeaderName, out var messageIdHeader);
-            _ = headers.TryGetValue(Constants.XSendToHeaderName, out var sendToHeader);
-            _ = headers.TryGetValue(Constants.XModelTypeHeaderName, out var modelTypeHeader);
+            _ = headers.TryGetValue(HeaderNames.XSentByHeaderName, out var sentByHeader);
+            _ = headers.TryGetValue(HeaderNames.XMessageIdHeaderName, out var messageIdHeader);
+            _ = headers.TryGetValue(HeaderNames.XSendToHeaderName, out var sendToHeader);
+            _ = headers.TryGetValue(HeaderNames.XModelTypeHeaderName, out var modelTypeHeader);
 
             // Setup payload
             var dmrPayload = new DmrRequestPayload()
