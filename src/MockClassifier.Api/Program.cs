@@ -21,8 +21,9 @@ namespace MockClassifier.Api
             var services = builder.Services;
 
             // Add services to the container.
-            var dmrSettings = configuration.GetSection("DmrServiceSettings").Get<DmrServiceSettings>();
-            var centOpsSettings = configuration.GetSection("DmrServiceSettings").Get<CentOpsServiceSettings>();
+            var settingsSectionName = "DmrServiceSettings";
+            var dmrSettings = configuration.GetSection(settingsSectionName).Get<DmrServiceSettings>();
+            var centOpsSettings = configuration.GetSection(settingsSectionName).Get<CentOpsServiceSettings>();
 
             services.AddDmrService(dmrSettings, centOpsSettings);
             services.TryAddSingleton<ITokenService, TokenService>();
