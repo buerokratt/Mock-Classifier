@@ -151,8 +151,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
     
     - name: Docker Build
-      working-directory: docker image build src/MockClassifier.Api/ -t mockclassifier
-      run: docker image build .
+      run: docker image build -f src/MockClassifier.Api/Dockerfile ./src -t mockclassifier
 
     - name: Scan for vulnerabilities
       uses: crazy-max/ghaction-container-scan@b5dc796ae2a0ab4338f6db67dd1041a1cf261c2c
