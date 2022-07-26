@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.UnitTests", "MockClassifier.UnitTests\MockClassifier.UnitTests.csproj", "{5007B237-0325-4856-A170-D0F690AF094B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.IntegrationTests", "MockClassifier.IntegrationTests\MockClassifier.IntegrationTests.csproj", "{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockClassifier.Api", "MockClassifier.Api\MockClassifier.Api.csproj", "{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{5007B237-0325-4856-A170-D0F690AF094B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5007B237-0325-4856-A170-D0F690AF094B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5007B237-0325-4856-A170-D0F690AF094B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEB633BB-2DC2-4836-9E34-E2FD6C4B52D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66A3D732-C37F-4E0A-8F2A-16A91CDFDBBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
