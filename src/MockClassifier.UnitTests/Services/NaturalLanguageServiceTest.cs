@@ -20,8 +20,8 @@ namespace MockClassifier.UnitTests.Services
         [InlineData("I have a question about the Estonian pension system", new string[] { "economic" })]
         [InlineData("How do I file my annual tax information", new string[] { "economic" })]
         [InlineData("i want to register my child at school", new string[] { "education" })]
-        [InlineData("", new string[] { "none" })]
-        [InlineData("not mapped", new string[] { "none" })]
+        [InlineData("", new string[] { })]
+        [InlineData("not mapped", new string[] { })]
         public void TestClassify(string messageBody, string[] expectedMinistries)
         {
             var result = naturalLanguageService.Classify(messageBody);
