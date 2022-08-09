@@ -4,6 +4,7 @@ using Buerokratt.Common.Encoder;
 using Buerokratt.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using MockClassifier.Api.Interfaces;
+using MockClassifier.Api.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -54,6 +55,12 @@ namespace MockClassifier.Api.Controllers
             // Classify
             List<string> classifications = _naturalLanguageService.Classify(payload.Message).ToList();
             classifications.AddRange(_tokenService.Classify(payload.Message).ToList());
+
+            // Add none classification if no classifications have been found
+            if (classifications.Count == 0)
+            {
+                classifications.Add(Ministry.none.ToString());
+            }
 
             // Send Dmr call back(s)
             foreach (var classification in classifications)

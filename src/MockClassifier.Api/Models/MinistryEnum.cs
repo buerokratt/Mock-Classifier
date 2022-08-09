@@ -12,6 +12,7 @@
         finance,
         social,
         interior,
-        foreign
+        foreign,
+        none
     }
 }

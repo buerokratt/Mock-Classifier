@@ -44,6 +44,11 @@ namespace MockClassifier.UnitTests
 
             // Assert
             _ = Assert.IsType<AcceptedResult>(result);
+            dmrService
+                .Verify(
+                    x => x.Enqueue(
+                        It.Is<DmrRequest>(d => d.Payload.Classification == "none")),
+                    Times.Once());
             dmrService.VerifyNoOtherCalls();
         }
 
