@@ -21,6 +21,7 @@ namespace MockClassifier.Api.Services
                 "how do i get to lahemaa park?" => Ministry.environment.ToString(),
                 "how do i arrange for my covid-19 booster vaccination" => Ministry.social.ToString(),
                 "i wish to understand what benefits my family are entitled to" => Ministry.social.ToString(),
+                "where can i buy school uniform" => Ministry.education.ToString(),
                 _ => null,
             };
             return ministry == null ? Array.Empty<string>() : (new string[] { ministry });
